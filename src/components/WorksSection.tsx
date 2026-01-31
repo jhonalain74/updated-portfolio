@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import leadEnrichmentImg from "@/assets/lead-enrichment.png";
+import leadQualificationImg from "@/assets/lead-qualification.png";
+import emailDashboardImg from "@/assets/email-dashboard.png";
 
 interface Project {
   id: string;
@@ -14,6 +16,7 @@ interface Project {
   image: string;
   problem: string;
   solution: string;
+  results: string[];
 }
 
 const projects: Project[] = [
@@ -21,25 +24,44 @@ const projects: Project[] = [
     id: "lead-enrichment",
     title: "Lead Enrichment Pipeline",
     category: "Automation",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop",
-    problem: "B2B sales teams often struggle with incomplete lead data—missing emails, outdated contact information, and lack of professional context. Manual enrichment is time-consuming, error-prone, and doesn't scale. This creates bottlenecks in the sales pipeline and leads to missed opportunities.",
-    solution: "Built an intelligent lead enrichment pipeline that automatically finds missing emails using multiple discovery APIs, verifies contact validity in real-time, and enriches lead profiles with professional data from LinkedIn, company databases, and other sources. The system features AI-powered prioritization, duplicate detection, and seamless CRM integration—reducing manual research time by 80% and improving lead quality scores significantly.",
+    image: leadEnrichmentImg,
+    problem: "Sales and marketing teams spend 10–15 minutes manually researching each lead to collect basic professional data such as verified emails, job titles, company details, and LinkedIn profiles. At scale, this creates a major bottleneck—delaying outreach, reducing productivity, and leading to incomplete or outdated contact data that lowers conversion rates.",
+    solution: "Built an automated lead enrichment system using workflow automation and API integrations that processes leads in under 10 seconds. The workflow intelligently handles two scenarios: discovering missing emails using name and company data, or verifying existing emails. Each lead is enriched with job details, company information, work experience, education, and social profiles. A built-in quality scoring system evaluates data completeness, flags low-quality records for review, and logs errors without interrupting the workflow.",
+    results: [
+      "⏱️ 99% time reduction — from ~15 minutes to ~10 seconds per lead",
+      "✅ 70–85% enrichment success rate",
+      "📊 Automated quality scoring and completeness tracking",
+      "🔄 Scalable batch processing with zero manual intervention",
+      "🎯 Improved outreach quality using verified, enriched contact data",
+    ],
   },
   {
     id: "b2b-automation",
     title: "B2B Lead Automation",
     category: "n8n Workflow",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop",
-    problem: "Managing B2B leads manually results in slow response times, inconsistent follow-ups, and poor lead qualification. Sales teams waste valuable time on low-quality leads while high-potential prospects slip through the cracks due to delayed outreach.",
-    solution: "Designed a production-ready B2B lead automation workflow in n8n featuring duplicate protection to maintain data integrity, AI-driven lead scoring and qualification, real-time Slack alerts for hot leads, and automated multi-touch email nurture sequences. The system integrates with CRM platforms and provides analytics dashboards for continuous optimization.",
+    image: leadQualificationImg,
+    problem: "B2B teams receive high volumes of leads that are often duplicated, inconsistently formatted, and poorly qualified, causing Sales to waste time on low-intent prospects while Marketing lacks a structured nurture process.",
+    solution: "I built an automated B2B lead qualification workflow using n8n that captures and normalizes form data, prevents duplicate leads, applies rule-based scoring with AI qualification, and routes leads to Marketing (MQL) or Sales (SQL). The system sends automated nurture emails to MQLs, real-time Slack alerts to Sales for SQLs, and logs all activity in Google Sheets for visibility and tracking.",
+    results: [
+      "⏱️ Significantly reduced manual work — lead processing time cut from ~15 minutes per lead to seconds",
+      "✅ Improved lead quality — MQLs nurtured automatically, SQLs routed immediately to Sales",
+      "🔄 Increased workflow efficiency — duplicates prevented and all actions logged for tracking",
+      "🎯 Better alignment between Sales and Marketing — clear ownership, faster follow-up, and higher engagement rates",
+    ],
   },
   {
     id: "email-dashboard",
     title: "Email Campaign Dashboard",
     category: "Data Analytics",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop",
-    problem: "Marketing teams often lack visibility into email campaign performance across multiple platforms. Scattered data makes it difficult to identify trends, optimize send times, and understand which campaigns drive actual conversions versus just opens.",
-    solution: "Developed a unified email campaign performance dashboard that aggregates data from multiple email platforms, tracks key metrics including open rates, click-through rates, and conversion attribution. Features include engagement heatmaps, A/B test analysis, subscriber segmentation insights, and automated weekly reports—enabling data-driven optimization decisions that improved overall campaign ROI.",
+    image: emailDashboardImg,
+    problem: "A long-term nurture (LTN) email campaign for Client A showed a steady decline in open rates despite historically strong engagement. With limited data available (only ~10 emails shared), the client lacked visibility into performance trends and potential drivers behind the drop.",
+    solution: "Built a focused email performance dashboard that visualized open rates and key engagement metrics over time, segmented by relevant campaign attributes. The dashboard highlighted trend changes, surfaced potential fatigue or timing issues, and provided actionable insights for optimizing future campaigns.",
+    results: [
+      "📉 Identified declining trends in open rates across specific email segments",
+      "📊 Clear visualization of engagement metrics enabled quick diagnosis",
+      "🎯 Data-driven recommendations to improve subject lines, timing, and content for higher engagement",
+      "⏱️ Faster decision-making with a centralized dashboard, reducing analysis time from hours to minutes",
+    ],
   },
 ];
 
@@ -138,7 +160,7 @@ const WorksSection = () => {
               </div>
 
               {/* Solution Section */}
-              <div className="space-y-3">
+              <div className="space-y-3 mb-8">
                 <h4 className="font-heading text-xl font-semibold text-foreground flex items-center gap-2">
                   <span className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary text-sm">
                     ✓
@@ -148,6 +170,23 @@ const WorksSection = () => {
                 <p className="text-muted-foreground leading-relaxed pl-10">
                   {selectedProject.solution}
                 </p>
+              </div>
+
+              {/* Results Section */}
+              <div className="space-y-3">
+                <h4 className="font-heading text-xl font-semibold text-foreground flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-lg bg-neon-cyan/20 flex items-center justify-center text-neon-cyan text-sm">
+                    📈
+                  </span>
+                  The Results
+                </h4>
+                <ul className="space-y-2 pl-10">
+                  {selectedProject.results.map((result, index) => (
+                    <li key={index} className="text-muted-foreground leading-relaxed">
+                      {result}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </>
           )}
