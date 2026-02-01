@@ -30,12 +30,15 @@ const services = [
 const ServicesSection = () => {
   return (
     <section id="services" className="py-24 relative">
-      <div className="container mx-auto px-4">
+      {/* Background accents */}
+      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[150px]" />
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
           <p className="text-primary font-medium mb-2 tracking-wider uppercase text-sm">
             What I Do
           </p>
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gradient-neon">
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gradient-primary">
             My Services
           </h2>
         </div>
@@ -44,14 +47,14 @@ const ServicesSection = () => {
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="group p-8 rounded-2xl bg-card border border-border card-glow opacity-0 animate-fade-in"
+              className="group card-float p-8 opacity-0 animate-fade-in"
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <div className="w-14 h-14 rounded-xl bg-gradient-neon flex items-center justify-center mb-6 glow-neon group-hover:glow-neon-intense transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center mb-6 glow-primary group-hover:glow-primary-intense transition-all duration-300">
                 <service.icon className="h-7 w-7 text-primary-foreground" />
               </div>
 
-              <h3 className="font-heading text-2xl font-bold mb-3 text-foreground group-hover:text-gradient-neon transition-all duration-300">
+              <h3 className="font-heading text-2xl font-bold mb-3 text-foreground group-hover:text-gradient-primary transition-all duration-300">
                 {service.title}
               </h3>
 

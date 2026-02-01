@@ -14,10 +14,13 @@ const FloatingIcon = ({
   size?: string;
 }) => (
   <div 
-    className={`absolute bg-card/60 backdrop-blur-md border border-primary/20 rounded-xl flex items-center justify-center animate-float-slow shadow-lg ${className}`}
-    style={{ animationDelay: delay }}
+    className={`absolute bg-card/80 backdrop-blur-xl border border-primary/30 rounded-2xl flex items-center justify-center animate-float-slow shadow-lg ${className}`}
+    style={{ 
+      animationDelay: delay,
+      boxShadow: '0 8px 32px hsl(250 85% 65% / 0.2)'
+    }}
   >
-    <Icon className={`${size} text-primary/80`} />
+    <Icon className={`${size} text-primary`} />
   </div>
 );
 
@@ -35,43 +38,41 @@ const HeroSection = () => {
       id="home"
       className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 pb-16"
     >
-      {/* Clean gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/20" />
+      {/* Deep gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/30 to-background" />
       
-      {/* Subtle ambient glow */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/8 rounded-full blur-[200px]" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[180px]" />
+      {/* Large decorative blobs */}
+      <div className="absolute top-20 right-20 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] animate-blob" />
+      <div className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-accent/15 rounded-full blur-[100px] animate-blob" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px]" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
           {/* Text Content */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <h1 
-              className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0 animate-fade-in leading-tight relative"
+              className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0 animate-fade-in leading-tight"
               style={{ animationDelay: "0.1s" }}
             >
-              <span className="text-foreground drop-shadow-[0_0_30px_hsl(var(--primary)/0.3)]">Data </span>
-              <span className="text-gradient-neon drop-shadow-[0_0_40px_hsl(var(--primary)/0.5)]">Analyst</span>
+              <span className="text-foreground">Data </span>
+              <span className="text-gradient-primary">Analyst</span>
               <span className="text-foreground"> & </span>
               <br className="hidden sm:block" />
-              <span className="text-foreground drop-shadow-[0_0_30px_hsl(var(--primary)/0.3)]">AI </span>
-              <span className="text-gradient-neon drop-shadow-[0_0_40px_hsl(var(--primary)/0.5)]">Automation</span>
+              <span className="text-foreground">AI </span>
+              <span className="text-gradient-primary">Automation</span>
               <span className="text-foreground"> Specialist</span>
             </h1>
 
-            <div className="relative">
-              <div className="absolute inset-0 bg-background/40 backdrop-blur-sm rounded-lg -m-2" />
-              <p 
-                className="relative text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed opacity-0 animate-fade-in p-2"
-                style={{ animationDelay: "0.2s" }}
-              >
-                I transform raw data into{" "}
-                <span className="text-foreground font-medium">actionable insights</span> and 
-                manual workflows into{" "}
-                <span className="text-foreground font-medium">intelligent automated systems</span>—helping 
-                businesses make smarter decisions and scale efficiently.
-              </p>
-            </div>
+            <p 
+              className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed opacity-0 animate-fade-in"
+              style={{ animationDelay: "0.2s" }}
+            >
+              I transform raw data into{" "}
+              <span className="text-foreground font-medium">actionable insights</span> and 
+              manual workflows into{" "}
+              <span className="text-foreground font-medium">intelligent automated systems</span>—helping 
+              businesses make smarter decisions and scale efficiently.
+            </p>
 
             <div 
               className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 opacity-0 animate-fade-in"
@@ -98,46 +99,52 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Avatar with Enhanced Integration */}
+          {/* Avatar with Premium Fintech Design */}
           <div 
             className="order-1 lg:order-2 flex justify-center lg:justify-end opacity-0 animate-fade-in relative"
             style={{ animationDelay: "0.2s" }}
           >
             <div className="relative group">
-              {/* Large decorative circle - clean solid style */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 group-hover:scale-105 transition-transform duration-500" />
+              {/* Outer glow ring */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 md:w-88 md:h-88 lg:w-[420px] lg:h-[420px] rounded-full border border-primary/20 animate-[spin_40s_linear_infinite]" />
               
-              {/* Yellow circle background */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full bg-[hsl(45_100%_60%)] opacity-90 group-hover:scale-105 transition-transform duration-500 shadow-[0_0_80px_hsl(45_100%_50%/0.3)]" />
+              {/* Large decorative circle - indigo/purple gradient */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-br from-primary/30 via-accent/20 to-primary/30 group-hover:scale-105 transition-transform duration-500" />
               
-              {/* Subtle orbiting ring */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 md:w-88 md:h-88 lg:w-[420px] lg:h-[420px] rounded-full border border-primary/10 animate-[spin_40s_linear_infinite]" />
+              {/* Inner solid indigo/purple circle */}
+              <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full opacity-95 group-hover:scale-105 transition-transform duration-500"
+                style={{
+                  background: 'linear-gradient(135deg, hsl(250 70% 55%) 0%, hsl(240 60% 45%) 100%)',
+                  boxShadow: '0 0 80px hsl(250 85% 65% / 0.4), inset 0 0 60px hsl(250 85% 65% / 0.2)'
+                }}
+              />
               
-              {/* Floating tech icons - simplified */}
+              {/* Floating tech icons */}
               <FloatingIcon 
                 icon={BarChart3} 
-                className="w-12 h-12 top-0 -left-4 md:top-4 md:-left-8" 
+                className="w-14 h-14 top-0 -left-4 md:top-4 md:-left-8" 
                 delay="0s"
               />
               <FloatingIcon 
                 icon={Brain} 
-                className="w-14 h-14 -top-8 right-8 md:-top-4 md:right-12" 
+                className="w-16 h-16 -top-8 right-8 md:-top-4 md:right-12" 
                 delay="0.5s"
-                size="w-7 h-7"
+                size="w-8 h-8"
               />
               <FloatingIcon 
                 icon={Code2} 
-                className="w-12 h-12 bottom-20 -right-4 md:bottom-24 md:-right-8" 
+                className="w-14 h-14 bottom-20 -right-4 md:bottom-24 md:-right-8" 
                 delay="1s"
               />
               <FloatingIcon 
                 icon={TrendingUp} 
-                className="w-10 h-10 bottom-8 left-0 md:bottom-12 md:-left-4" 
+                className="w-12 h-12 bottom-8 left-0 md:bottom-12 md:-left-4" 
                 delay="1.5s"
-                size="w-5 h-5"
+                size="w-6 h-6"
               />
               
-              {/* Avatar image container with enhanced effects */}
+              {/* Avatar image container */}
               <div className="relative z-10 animate-avatar-float group-hover:scale-[1.02] transition-transform duration-500">
                 <img 
                   src={avatarImage} 
@@ -151,8 +158,8 @@ const HeroSection = () => {
                 />
               </div>
 
-              {/* Ground shadow/glow effect */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-8 bg-gradient-to-t from-primary/20 to-transparent rounded-full blur-xl" />
+              {/* Ground glow effect */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-8 bg-gradient-to-t from-primary/30 to-transparent rounded-full blur-xl" />
             </div>
           </div>
         </div>
