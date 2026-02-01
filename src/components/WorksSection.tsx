@@ -72,10 +72,11 @@ const WorksSection = () => {
     <section id="works" className="py-24 relative">
       {/* Background accent */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent" />
+      <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px]" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gradient-neon mb-4">
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gradient-primary mb-4">
             Featured Projects
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -87,7 +88,7 @@ const WorksSection = () => {
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className="group relative rounded-2xl overflow-hidden bg-card border border-border card-glow cursor-pointer opacity-0 animate-fade-in"
+              className="group relative rounded-2xl overflow-hidden card-float cursor-pointer opacity-0 animate-fade-in"
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
               onClick={() => setSelectedProject(project)}
             >
@@ -101,7 +102,7 @@ const WorksSection = () => {
                 
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <span className="text-gradient-neon font-heading font-semibold text-lg border border-primary/50 px-6 py-3 rounded-lg glow-neon">
+                  <span className="text-gradient-primary font-heading font-semibold text-lg border border-primary/50 px-6 py-3 rounded-full glow-primary">
                     View Case Study
                   </span>
                 </div>
@@ -112,7 +113,7 @@ const WorksSection = () => {
                 <span className="text-xs font-medium px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
                   {project.category}
                 </span>
-                <h3 className="font-heading text-xl font-bold mt-3 text-foreground group-hover:text-gradient-neon transition-all duration-300">
+                <h3 className="font-heading text-xl font-bold mt-3 text-foreground group-hover:text-gradient-primary transition-all duration-300">
                   {project.title}
                 </h3>
               </div>
@@ -132,7 +133,7 @@ const WorksSection = () => {
                     {selectedProject.category}
                   </span>
                 </div>
-                <DialogTitle className="font-heading text-2xl md:text-3xl font-bold text-gradient-neon">
+                <DialogTitle className="font-heading text-2xl md:text-3xl font-bold text-gradient-primary">
                   {selectedProject.title}
                 </DialogTitle>
               </DialogHeader>
@@ -175,7 +176,7 @@ const WorksSection = () => {
               {/* Results Section */}
               <div className="space-y-3">
                 <h4 className="font-heading text-xl font-semibold text-foreground flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-neon-cyan/20 flex items-center justify-center text-neon-cyan text-sm">
+                  <span className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center text-accent text-sm">
                     📈
                   </span>
                   The Results

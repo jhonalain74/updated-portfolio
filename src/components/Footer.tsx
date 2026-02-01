@@ -2,10 +2,10 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-8 border-t border-border">
+    <footer className="py-8 border-t border-border/50 bg-background/50 backdrop-blur-sm">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-heading text-lg font-bold text-gradient-neon">
+          <p className="font-heading text-lg font-bold text-gradient-primary">
             JGA
           </p>
           <p className="text-muted-foreground text-sm text-center">

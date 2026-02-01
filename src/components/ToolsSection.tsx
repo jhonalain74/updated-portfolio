@@ -18,13 +18,14 @@ const ToolsSection = () => {
     <section id="tools" className="py-24 relative">
       {/* Background accent */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent" />
+      <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[120px]" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
           <p className="text-primary font-medium mb-2 tracking-wider uppercase text-sm">
             My Tech Stack
           </p>
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gradient-neon mb-4">
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gradient-primary mb-4">
             Tools & Technologies
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -37,10 +38,10 @@ const ToolsSection = () => {
             {tools.map((tool, index) => (
               <div
                 key={tool.name}
-                className="group px-6 py-3 rounded-full bg-card border border-border hover:border-primary/50 card-glow transition-all duration-300 opacity-0 animate-fade-in"
+                className="group px-6 py-3 rounded-full bg-card border border-border hover:border-primary/50 card-glow transition-all duration-300 opacity-0 animate-fade-in hover:bg-primary/5"
                 style={{ animationDelay: `${0.05 * (index + 1)}s` }}
               >
-                <span className="font-medium text-foreground group-hover:text-gradient-neon transition-all duration-300">
+                <span className="font-medium text-foreground group-hover:text-primary transition-all duration-300">
                   {tool.name}
                 </span>
               </div>

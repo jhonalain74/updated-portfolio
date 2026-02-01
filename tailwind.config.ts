@@ -54,9 +54,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        neon: {
-          green: "hsl(var(--neon-green))",
-          cyan: "hsl(var(--neon-cyan))",
+        purple: {
+          primary: "hsl(var(--purple-primary))",
+          secondary: "hsl(var(--purple-secondary))",
+        },
+        indigo: {
+          deep: "hsl(var(--indigo-deep))",
         },
       },
       borderRadius: {
