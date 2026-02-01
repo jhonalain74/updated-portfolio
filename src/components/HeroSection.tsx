@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Mail } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import avatarImage from "@/assets/avatar.png";
 
 const HeroSection = () => {
   const scrollToContact = () => {
@@ -37,7 +38,7 @@ const HeroSection = () => {
               {/* Avatar container */}
               <Avatar className="w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 border-4 border-primary/30 shadow-2xl relative animate-float">
                 <AvatarImage 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face" 
+                  src={avatarImage} 
                   alt="Jhon Gennes Alain"
                   className="object-cover"
                 />
