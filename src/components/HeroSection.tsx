@@ -8,7 +8,7 @@ const HeroSection = () => {
   };
 
   const scrollToProjects = () => {
-    document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" });
+    document.querySelector("#works")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
