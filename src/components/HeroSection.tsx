@@ -220,7 +220,7 @@ const HeroSection = () => {
                   alt="Jhon Gennes Alain - Data Analyst & AI Automation Specialist"
                   className="w-72 h-auto md:w-80 lg:w-96 object-contain relative z-10"
                   style={{
-                    filter: 'drop-shadow(0 0 25px hsl(142 76% 50% / 0.5)) drop-shadow(0 0 50px hsl(166 76% 50% / 0.3)) drop-shadow(0 20px 40px hsl(0 0% 0% / 0.5))',
+                    filter: 'drop-shadow(0 20px 40px hsl(0 0% 0% / 0.5))',
                     maskImage: 'radial-gradient(ellipse 90% 90% at 50% 48%, black 65%, transparent 100%)',
                     WebkitMaskImage: 'radial-gradient(ellipse 90% 90% at 50% 48%, black 65%, transparent 100%)',
                   }}
