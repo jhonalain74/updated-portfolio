@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
@@ -13,20 +13,50 @@ const navLinks = [
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("#home");
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+      
+      // Update active section based on scroll position
+      const sections = navLinks.map(link => link.href.slice(1));
+      for (const section of sections.reverse()) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 100) {
+            setActiveSection(`#${section}`);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleClick = (href: string) => {
     setIsOpen(false);
+    setActiveSection(href);
     const element = document.querySelector(href);
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled 
+        ? "bg-background/90 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-background/50" 
+        : "bg-transparent"
+    }`}>
+      <div className="container mx-auto px-6">
+        <div className="flex items-center justify-between h-18 py-4">
+          {/* Logo */}
           <a 
             href="#home" 
-            className="font-heading text-xl font-bold text-gradient-primary"
+            className="font-heading text-2xl font-bold text-gradient-primary hover:opacity-80 transition-opacity duration-300"
             onClick={(e) => {
               e.preventDefault();
               handleClick("#home");
@@ -36,16 +66,22 @@ const Navigation = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-1 bg-card/50 backdrop-blur-sm rounded-full px-2 py-1.5 border border-border/50">
             {navLinks.map((link) => (
-              <Button
+              <button
                 key={link.href}
-                variant="neonGhost"
-                size="sm"
                 onClick={() => handleClick(link.href)}
+                className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 ${
+                  activeSection === link.href
+                    ? "text-primary-foreground bg-gradient-primary shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                }`}
               >
                 {link.label}
-              </Button>
+                {activeSection === link.href && (
+                  <span className="absolute inset-0 rounded-full bg-gradient-primary opacity-20 blur-md" />
+                )}
+              </button>
             ))}
           </div>
 
@@ -53,8 +89,9 @@ const Navigation = () => {
           <div className="hidden md:block">
             <Button 
               variant="neon" 
-              size="sm"
+              size="default"
               onClick={() => handleClick("#contact")}
+              className="shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300"
             >
               Get Started
             </Button>
@@ -64,7 +101,7 @@ const Navigation = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden hover:bg-secondary/50"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -72,22 +109,32 @@ const Navigation = () => {
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden py-4 border-t border-border/50">
-            <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <Button
-                  key={link.href}
-                  variant="neonGhost"
-                  className="justify-start"
-                  onClick={() => handleClick(link.href)}
-                >
-                  {link.label}
-                </Button>
-              ))}
-            </div>
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? "max-h-96 opacity-100 pb-6" : "max-h-0 opacity-0"
+        }`}>
+          <div className="flex flex-col gap-1 pt-4 border-t border-border/50">
+            {navLinks.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => handleClick(link.href)}
+                className={`text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                  activeSection === link.href
+                    ? "text-primary-foreground bg-gradient-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
+            <Button 
+              variant="neon" 
+              className="mt-4"
+              onClick={() => handleClick("#contact")}
+            >
+              Get Started
+            </Button>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );
