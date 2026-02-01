@@ -97,7 +97,12 @@ const HeroSection = () => {
                 <img 
                   src={avatarImage} 
                   alt="Jhon Gennes Alain - Data Analyst & AI Automation Specialist"
-                  className="w-72 h-auto md:w-80 lg:w-96 object-contain drop-shadow-2xl"
+                  className="w-72 h-auto md:w-80 lg:w-96 object-contain"
+                  style={{
+                    filter: 'drop-shadow(0 0 20px hsl(142 76% 50% / 0.4)) drop-shadow(0 0 40px hsl(166 76% 50% / 0.25))',
+                    maskImage: 'radial-gradient(ellipse 85% 85% at 50% 50%, black 60%, transparent 100%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 85% 85% at 50% 50%, black 60%, transparent 100%)',
+                  }}
                 />
               </div>
 
