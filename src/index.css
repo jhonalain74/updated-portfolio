@@ -153,4 +153,20 @@
       transform: translateY(-10px);
     }
   }
+
+  .animate-avatar-float {
+    animation: avatar-float 4s ease-in-out infinite;
+  }
+
+  @keyframes avatar-float {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-8px) rotate(0.5deg);
+    }
+    75% {
+      transform: translateY(-4px) rotate(-0.5deg);
+    }
+  }
 }
