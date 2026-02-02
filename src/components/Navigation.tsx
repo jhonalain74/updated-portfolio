@@ -8,7 +8,6 @@ const navLinks = [
   { href: "#services", label: "Services" },
   { href: "#works", label: "Projects" },
   { href: "#tools", label: "Tools" },
-  { href: "#contact", label: "Contact" },
 ];
 
 const Navigation = () => {
@@ -90,10 +89,12 @@ const Navigation = () => {
             <Button 
               variant="neon" 
               size="default"
-              onClick={() => handleClick("#contact")}
+              asChild
               className="shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300"
             >
-              Get Started
+              <a href="https://calendly.com/jhonalain74/30min" target="_blank" rel="noopener noreferrer">
+                Let's talk
+              </a>
             </Button>
           </div>
 
@@ -129,9 +130,11 @@ const Navigation = () => {
             <Button 
               variant="neon" 
               className="mt-4"
-              onClick={() => handleClick("#contact")}
+              asChild
             >
-              Get Started
+              <a href="https://calendly.com/jhonalain74/30min" target="_blank" rel="noopener noreferrer">
+                Let's talk
+              </a>
             </Button>
           </div>
         </div>
