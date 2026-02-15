@@ -1,7 +1,36 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Mail, Linkedin, MapPin, ArrowUpRight, MessageCircle, Send } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Mail, Linkedin, MapPin, ArrowUpRight, MessageCircle, Send, User, FileText, AtSign } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const ContactSection = () => {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    subject: "",
+    fullName: "",
+    email: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    const mailtoLink = `mailto:jhon.alain5@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`From: ${formData.fullName} (${formData.email})\n\n${formData.message}`)}`;
+    window.open(mailtoLink, "_blank");
+    
+    toast({
+      title: "Opening email client...",
+      description: "Your message details have been prepared.",
+    });
+    
+    setIsSubmitting(false);
+  };
+
   return (
     <section id="contact" className="py-24 relative overflow-hidden">
       {/* Background effects */}
@@ -80,41 +109,103 @@ const ContactSection = () => {
             </a>
           </div>
 
-          {/* CTA Section */}
+          {/* Contact Form */}
           <div 
-            className="relative text-center p-10 rounded-3xl bg-card/80 backdrop-blur-sm border border-border/50 opacity-0 animate-fade-in overflow-hidden"
+            className="relative p-8 md:p-10 rounded-3xl bg-card/80 backdrop-blur-sm border border-border/50 opacity-0 animate-fade-in overflow-hidden"
             style={{ animationDelay: "0.3s" }}
           >
-            {/* Background gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
             
             <div className="relative">
-              {/* Location */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 text-muted-foreground mb-6">
+              <div className="flex items-center justify-center gap-2 mb-2">
                 <MapPin className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium">Manila, Philippines</span>
+                <span className="text-sm font-medium text-muted-foreground">Manila, Philippines</span>
               </div>
               
-              {/* Heading */}
-              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">
+              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-2 text-center">
                 Ready to start your project?
               </h3>
-              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+              <p className="text-muted-foreground mb-8 max-w-md mx-auto text-center">
                 Let's discuss how I can help transform your data and automate your workflows.
               </p>
               
-              {/* CTA Button */}
-              <Button 
-                variant="neon" 
-                size="xl" 
-                asChild 
-                className="shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300"
-              >
-                <a href="mailto:jhon.alain5@gmail.com">
-                  <Send className="mr-2 h-5 w-5" />
-                  Send Me a Message
-                </a>
-              </Button>
+              <form onSubmit={handleSubmit} className="space-y-5 max-w-2xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName" className="text-sm font-medium text-foreground flex items-center gap-2">
+                      <User className="h-3.5 w-3.5 text-primary" />
+                      Full Name
+                    </Label>
+                    <Input
+                      id="fullName"
+                      placeholder="Your full name"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      required
+                      className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-xl h-12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-medium text-foreground flex items-center gap-2">
+                      <AtSign className="h-3.5 w-3.5 text-primary" />
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                      className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-xl h-12"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="subject" className="text-sm font-medium text-foreground flex items-center gap-2">
+                    <FileText className="h-3.5 w-3.5 text-primary" />
+                    Subject
+                  </Label>
+                  <Input
+                    id="subject"
+                    placeholder="What's this about?"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    required
+                    className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-xl h-12"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="message" className="text-sm font-medium text-foreground flex items-center gap-2">
+                    <MessageCircle className="h-3.5 w-3.5 text-primary" />
+                    Write your message
+                  </Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Tell me about your project..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    required
+                    rows={5}
+                    className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-xl resize-none"
+                  />
+                </div>
+                
+                <div className="text-center pt-2">
+                  <Button 
+                    type="submit"
+                    variant="neon" 
+                    size="xl" 
+                    disabled={isSubmitting}
+                    className="shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300"
+                  >
+                    <Send className="mr-2 h-5 w-5" />
+                    Send Message
+                  </Button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
