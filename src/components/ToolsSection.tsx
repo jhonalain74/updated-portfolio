@@ -28,6 +28,29 @@ const tools = [
   { name: "Excel", category: "Data", icon: FileSpreadsheet, color: "from-green-500 to-emerald-600" },
 ];
 
+// Double the array for seamless looping
+const duplicatedTools = [...tools, ...tools];
+
+const ToolCard = ({ tool }: { tool: typeof tools[0] }) => {
+  const IconComponent = tool.icon;
+  return (
+    <div className="group relative flex-shrink-0 w-40 p-5 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 cursor-default">
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="relative flex flex-col items-center text-center gap-3">
+        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+          <IconComponent className="h-6 w-6 text-white" />
+        </div>
+        <span className="font-medium text-foreground group-hover:text-primary transition-colors duration-300 text-sm">
+          {tool.name}
+        </span>
+        <span className="text-xs text-muted-foreground/70 px-2 py-0.5 rounded-full bg-secondary/50">
+          {tool.category}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 const ToolsSection = () => {
   return (
     <section id="tools" className="py-24 relative overflow-hidden">
@@ -48,40 +71,27 @@ const ToolsSection = () => {
             The platforms and technologies I use to transform data into insights and manual processes into automated workflows.
           </p>
         </div>
+      </div>
 
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {tools.map((tool, index) => {
-              const IconComponent = tool.icon;
-              return (
-                <div
-                  key={tool.name}
-                  className="group relative p-5 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 opacity-0 animate-fade-in cursor-default"
-                  style={{ animationDelay: `${0.05 * (index + 1)}s` }}
-                >
-                  {/* Hover glow effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  <div className="relative flex flex-col items-center text-center gap-3">
-                    {/* Icon with gradient background */}
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                      <IconComponent className="h-6 w-6 text-white" />
-                    </div>
-                    
-                    {/* Tool name */}
-                    <span className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">
-                      {tool.name}
-                    </span>
-                    
-                    {/* Category badge */}
-                    <span className="text-xs text-muted-foreground/70 px-2 py-0.5 rounded-full bg-secondary/50">
-                      {tool.category}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {/* Carousel Row 1 - scrolls left */}
+      <div className="relative mb-4">
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <div className="flex gap-4 animate-[scroll-left_30s_linear_infinite] hover:[animation-play-state:paused] w-max">
+          {duplicatedTools.map((tool, index) => (
+            <ToolCard key={`row1-${index}`} tool={tool} />
+          ))}
+        </div>
+      </div>
+
+      {/* Carousel Row 2 - scrolls right */}
+      <div className="relative">
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <div className="flex gap-4 animate-[scroll-right_35s_linear_infinite] hover:[animation-play-state:paused] w-max">
+          {[...duplicatedTools].reverse().map((tool, index) => (
+            <ToolCard key={`row2-${index}`} tool={tool} />
+          ))}
         </div>
       </div>
     </section>
