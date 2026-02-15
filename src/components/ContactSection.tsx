@@ -109,103 +109,110 @@ const ContactSection = () => {
             </a>
           </div>
 
-          {/* Contact Form */}
+          {/* Form + Calendly Grid */}
           <div 
-            className="relative p-8 md:p-10 rounded-3xl bg-card/80 backdrop-blur-sm border border-border/50 opacity-0 animate-fade-in overflow-hidden"
+            className="grid lg:grid-cols-2 gap-6 opacity-0 animate-fade-in"
             style={{ animationDelay: "0.3s" }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-            
-            <div className="relative">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-muted-foreground">Manila, Philippines</span>
-              </div>
-              
-              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-2 text-center">
-                Ready to start your project?
-              </h3>
-              <p className="text-muted-foreground mb-8 max-w-md mx-auto text-center">
-                Let's discuss how I can help transform your data and automate your workflows.
-              </p>
-              
-              <form onSubmit={handleSubmit} className="space-y-5 max-w-2xl mx-auto">
-                <div className="grid md:grid-cols-2 gap-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName" className="text-sm font-medium text-foreground flex items-center gap-2">
-                      <User className="h-3.5 w-3.5 text-primary" />
-                      Full Name
+            {/* Compact Contact Form */}
+            <div className="relative p-6 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-1">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span className="text-xs font-medium text-muted-foreground">Manila, Philippines</span>
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-4">
+                  Send a Message
+                </h3>
+                
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="fullName" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                        <User className="h-3 w-3 text-primary" />
+                        Full Name
+                      </Label>
+                      <Input
+                        id="fullName"
+                        placeholder="Your name"
+                        value={formData.fullName}
+                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                        required
+                        className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-lg h-9 text-sm"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="email" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                        <AtSign className="h-3 w-3 text-primary" />
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required
+                        className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-lg h-9 text-sm"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <Label htmlFor="subject" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                      <FileText className="h-3 w-3 text-primary" />
+                      Subject
                     </Label>
                     <Input
-                      id="fullName"
-                      placeholder="Your full name"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      id="subject"
+                      placeholder="What's this about?"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       required
-                      className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-xl h-12"
+                      className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-lg h-9 text-sm"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium text-foreground flex items-center gap-2">
-                      <AtSign className="h-3.5 w-3.5 text-primary" />
-                      Email
+                  
+                  <div className="space-y-1">
+                    <Label htmlFor="message" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                      <MessageCircle className="h-3 w-3 text-primary" />
+                      Message
                     </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    <Textarea
+                      id="message"
+                      placeholder="Tell me about your project..."
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       required
-                      className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-xl h-12"
+                      rows={3}
+                      className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-lg resize-none text-sm"
                     />
                   </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <FileText className="h-3.5 w-3.5 text-primary" />
-                    Subject
-                  </Label>
-                  <Input
-                    id="subject"
-                    placeholder="What's this about?"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    required
-                    className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-xl h-12"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <MessageCircle className="h-3.5 w-3.5 text-primary" />
-                    Write your message
-                  </Label>
-                  <Textarea
-                    id="message"
-                    placeholder="Tell me about your project..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    required
-                    rows={5}
-                    className="bg-secondary/30 border-border/50 focus:border-primary/50 rounded-xl resize-none"
-                  />
-                </div>
-                
-                <div className="text-center pt-2">
+                  
                   <Button 
                     type="submit"
                     variant="neon" 
-                    size="xl" 
+                    size="default"
                     disabled={isSubmitting}
-                    className="shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300"
+                    className="w-full shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300"
                   >
-                    <Send className="mr-2 h-5 w-5" />
+                    <Send className="mr-2 h-4 w-4" />
                     Send Message
                   </Button>
-                </div>
-              </form>
+                </form>
+              </div>
+            </div>
+
+            {/* Calendly Embed */}
+            <div className="relative rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+              <iframe
+                src="https://calendly.com/jhonalain74/30min?hide_gdpr_banner=1&background_color=0a0a1a&text_color=e0e0e0&primary_color=7c5cfc"
+                className="relative w-full h-full min-h-[500px] rounded-2xl"
+                frameBorder="0"
+                title="Book a Call"
+              />
             </div>
           </div>
         </div>
