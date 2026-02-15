@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Linkedin, MapPin, ArrowUpRight, MessageCircle, Send, User, FileText, AtSign } from "lucide-react";
+import { Mail, Linkedin, MapPin, MessageCircle, Send, User, FileText, AtSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const ContactSection = () => {
@@ -54,60 +54,6 @@ const ContactSection = () => {
             </p>
           </div>
 
-          {/* Contact Cards */}
-          <div className="grid md:grid-cols-2 gap-6 mb-12">
-            {/* Email Card */}
-            <a
-              href="mailto:jhon.alain5@gmail.com"
-              className="group relative p-8 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 opacity-0 animate-fade-in overflow-hidden"
-              style={{ animationDelay: "0.1s" }}
-            >
-              {/* Hover gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              <div className="relative flex items-center gap-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-primary/40 group-hover:scale-105 transition-all duration-300">
-                  <Mail className="h-7 w-7 text-primary-foreground" />
-                </div>
-                <div className="flex-grow">
-                  <p className="text-sm text-muted-foreground mb-1 font-medium">Email</p>
-                  <p className="font-heading text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-                    jhon.alain5@gmail.com
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                  <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
-                </div>
-              </div>
-            </a>
-
-            {/* LinkedIn Card */}
-            <a
-              href="https://www.linkedin.com/in/jhongennes/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative p-8 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 opacity-0 animate-fade-in overflow-hidden"
-              style={{ animationDelay: "0.2s" }}
-            >
-              {/* Hover gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              <div className="relative flex items-center gap-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 group-hover:scale-105 transition-all duration-300">
-                  <Linkedin className="h-7 w-7 text-white" />
-                </div>
-                <div className="flex-grow">
-                  <p className="text-sm text-muted-foreground mb-1 font-medium">LinkedIn</p>
-                  <p className="font-heading text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-                    /in/jhongennes
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                  <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
-                </div>
-              </div>
-            </a>
-          </div>
 
           {/* Form + Calendly Grid */}
           <div 
@@ -201,6 +147,26 @@ const ContactSection = () => {
                     Send Message
                   </Button>
                 </form>
+
+                {/* Social Icons */}
+                <div className="flex items-center justify-center gap-3 mt-4">
+                  <a
+                    href="mailto:jhon.alain5@gmail.com"
+                    className="w-10 h-10 rounded-full bg-secondary/50 border border-border/50 flex items-center justify-center hover:bg-primary/20 hover:border-primary/30 transition-all duration-300 group"
+                    aria-label="Email"
+                  >
+                    <Mail className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/jhongennes/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-secondary/50 border border-border/50 flex items-center justify-center hover:bg-primary/20 hover:border-primary/30 transition-all duration-300 group"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+                  </a>
+                </div>
               </div>
             </div>
 
