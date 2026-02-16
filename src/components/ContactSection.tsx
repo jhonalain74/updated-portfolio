@@ -15,25 +15,32 @@ const CalendlyWidget = () => {
     script.async = true;
     document.body.appendChild(script);
 
+    // Add global style to hide Calendly's inner white background
+    const style = document.createElement("style");
+    style.textContent = `
+      .calendly-inline-widget iframe {
+        filter: invert(0.88) hue-rotate(180deg) saturate(1.2) brightness(0.85);
+        border-radius: 0.75rem;
+      }
+    `;
+    document.head.appendChild(style);
+
     return () => {
       document.body.removeChild(script);
+      document.head.removeChild(style);
     };
   }, []);
 
   return (
-    <div className="relative min-h-[460px] rounded-xl overflow-hidden">
-      {/* Dark overlay to blend edges */}
-      <div
-        ref={containerRef}
-        className="calendly-inline-widget min-h-[460px] rounded-xl"
-        data-url="https://calendly.com/jhonalain74/30min?hide_gdpr_banner=1&background_color=0f0f23&text_color=e0e0e0&primary_color=7c5cfc"
-        style={{ 
-          minWidth: "100%", 
-          height: "100%",
-          filter: "invert(1) hue-rotate(180deg)",
-        }}
-      />
-    </div>
+    <div
+      ref={containerRef}
+      className="calendly-inline-widget rounded-xl overflow-hidden"
+      data-url="https://calendly.com/jhonalain74/30min?hide_gdpr_banner=1&background_color=ffffff&text_color=1a1a2e&primary_color=7c5cfc"
+      style={{ 
+        minWidth: "100%", 
+        height: "520px",
+      }}
+    />
   );
 };
 
