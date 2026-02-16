@@ -171,14 +171,19 @@ const ContactSection = () => {
             </div>
 
             {/* Calendly Embed */}
-            <div className="relative rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 overflow-hidden">
+            <div className="relative p-6 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-              <iframe
-                src="https://calendly.com/jhonalain74/30min?hide_gdpr_banner=1&background_color=0a0a1a&text_color=e0e0e0&primary_color=7c5cfc"
-                className="relative w-full h-full min-h-[500px] rounded-2xl"
-                frameBorder="0"
-                title="Book a Call"
-              />
+              <div className="relative h-full">
+                <h3 className="font-heading text-xl font-bold text-foreground mb-4">
+                  Book a Call
+                </h3>
+                <iframe
+                  src="https://calendly.com/jhonalain74/30min?hide_gdpr_banner=1&background_color=0a0a1a&text_color=e0e0e0&primary_color=7c5cfc"
+                  className="w-full h-[calc(100%-2rem)] min-h-[460px] rounded-xl"
+                  frameBorder="0"
+                  title="Book a Call"
+                />
+              </div>
             </div>
           </div>
         </div>
