@@ -89,12 +89,13 @@ const Navigation = () => {
             <Button 
               variant="neon" 
               size="default"
-              asChild
               className="shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow duration-300"
+              onClick={() => {
+                const el = document.getElementById("contact");
+                el?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
-              <a href="https://calendly.com/jhonalain74/30min" target="_blank" rel="noopener noreferrer">
-                Let's talk
-              </a>
+              Let's talk
             </Button>
           </div>
 
@@ -130,11 +131,13 @@ const Navigation = () => {
             <Button 
               variant="neon" 
               className="mt-4"
-              asChild
+              onClick={() => {
+                setIsOpen(false);
+                const el = document.getElementById("contact");
+                el?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
-              <a href="https://calendly.com/jhonalain74/30min" target="_blank" rel="noopener noreferrer">
-                Let's talk
-              </a>
+              Let's talk
             </Button>
           </div>
         </div>
