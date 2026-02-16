@@ -1,10 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Linkedin, MapPin, MessageCircle, Send, User, FileText, AtSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const CalendlyWidget = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  return (
+    <div className="relative min-h-[460px] rounded-xl overflow-hidden">
+      {/* Dark overlay to blend edges */}
+      <div
+        ref={containerRef}
+        className="calendly-inline-widget min-h-[460px] rounded-xl"
+        data-url="https://calendly.com/jhonalain74/30min?hide_gdpr_banner=1&background_color=0f0f23&text_color=e0e0e0&primary_color=7c5cfc"
+        style={{ 
+          minWidth: "100%", 
+          height: "100%",
+          filter: "invert(1) hue-rotate(180deg)",
+        }}
+      />
+    </div>
+  );
+};
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -177,12 +208,7 @@ const ContactSection = () => {
                 <h3 className="font-heading text-xl font-bold text-foreground mb-4">
                   Book a Call
                 </h3>
-                <iframe
-                  src="https://calendly.com/jhonalain74/30min?hide_gdpr_banner=1&background_color=0a0a1a&text_color=e0e0e0&primary_color=7c5cfc"
-                  className="w-full h-[calc(100%-2rem)] min-h-[460px] rounded-xl"
-                  frameBorder="0"
-                  title="Book a Call"
-                />
+                <CalendlyWidget />
               </div>
             </div>
           </div>
