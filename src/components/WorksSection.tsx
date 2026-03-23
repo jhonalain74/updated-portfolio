@@ -9,6 +9,7 @@ import leadEnrichmentImg from "@/assets/lead-enrichment.png";
 import leadQualificationImg from "@/assets/lead-qualification.png";
 import emailDashboardImg from "@/assets/email-dashboard.png";
 import heyreachAutomationImg from "@/assets/heyreach-automation.png";
+import instantlyToCrmImg from "@/assets/instantly-to-crm.png";
 
 interface Project {
   id: string;
@@ -78,6 +79,21 @@ const projects: Project[] = [
       "🎯 Faster sales follow-up — interested leads immediately pushed to CRM",
       "📈 Reduced manual work — eliminates manual response review and lead tracking",
       "🔄 Scalable outreach process — handles high volumes of LinkedIn responses automatically",
+    ],
+  },
+  {
+    id: "instantly-to-crm",
+    title: "Instantly Reply to CRM Automation",
+    category: "n8n Workflow",
+    image: instantlyToCrmImg,
+    problem: "The sales team was running email outreach campaigns through Instantly, but replies from prospects were not automatically tracked or centralized. When a lead responded, the team had to manually check inboxes, update the CRM, and notify the team. This caused delays in follow-ups and increased the risk of missing high-intent leads.",
+    solution: "Built an automated workflow using webhook-based event triggers. The system listens for reply events from Instantly and processes them in real time. When a lead replies, Instantly sends a webhook event when a reply is detected. The automation captures the lead data and stores it in the company CRM. The workflow formats the lead information and sends a notification to the sales team via Slack. The notification includes key lead details so the team can quickly follow up. This automation ensures that all engaged leads are immediately visible to the team without manual tracking.",
+    results: [
+      "✅ Eliminated manual monitoring of outreach inboxes",
+      "⏱️ Enabled real-time notifications for replied leads",
+      "⚡ Improved sales response time to inbound replies",
+      "📂 Created a centralized record of all engaged prospects in the CRM",
+      "🚀 Increased operational efficiency by automating the lead tracking process",
     ],
   },
 ];
