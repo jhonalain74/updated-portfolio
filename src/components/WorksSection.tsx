@@ -101,7 +101,7 @@ const WorksSection = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
           {projects.map((project, index) => (
             <div
               key={project.id}
