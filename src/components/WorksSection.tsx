@@ -9,6 +9,7 @@ import leadEnrichmentImg from "@/assets/lead-enrichment.png";
 import leadQualificationImg from "@/assets/lead-qualification.png";
 import emailDashboardImg from "@/assets/email-dashboard.png";
 import heyreachAutomationImg from "@/assets/heyreach-automation.png";
+import instantlyToCrmImg from "@/assets/instantly-to-crm.png";
 
 interface Project {
   id: string;
