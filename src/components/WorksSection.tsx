@@ -81,7 +81,6 @@ const projects: Project[] = [
       "🔄 Scalable outreach process — handles high volumes of LinkedIn responses automatically",
     ],
   },
-  },
   {
     id: "instantly-to-crm",
     title: "Instantly Reply to CRM Automation",
