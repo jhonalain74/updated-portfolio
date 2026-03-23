@@ -8,6 +8,7 @@ import {
 import leadEnrichmentImg from "@/assets/lead-enrichment.png";
 import leadQualificationImg from "@/assets/lead-qualification.png";
 import emailDashboardImg from "@/assets/email-dashboard.png";
+import heyreachAutomationImg from "@/assets/heyreach-automation.png";
 
 interface Project {
   id: string;
