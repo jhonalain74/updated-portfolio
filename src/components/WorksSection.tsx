@@ -8,6 +8,7 @@ import {
 import leadEnrichmentImg from "@/assets/lead-enrichment.png";
 import leadQualificationImg from "@/assets/lead-qualification.png";
 import emailDashboardImg from "@/assets/email-dashboard.png";
+import heyreachAutomationImg from "@/assets/heyreach-automation.png";
 
 interface Project {
   id: string;
@@ -63,6 +64,22 @@ const projects: Project[] = [
       "⏱️ Faster decision-making with a centralized dashboard, reducing analysis time from hours to minutes",
     ],
   },
+  {
+    id: "heyreach-automation",
+    title: "LinkedIn Outreach Automation",
+    category: "n8n Workflow",
+    image: heyreachAutomationImg,
+    problem: "LinkedIn outreach campaigns can generate many connection acceptances and replies, but tracking and qualifying these leads manually is inefficient. Teams often need to monitor accepted connections, review each reply, determine whether the lead is interested, and then manually update the CRM. This process is time-consuming, increases the risk of missing potential opportunities, and slows down the sales follow-up process.",
+    solution: "Built an automated LinkedIn outreach response management system using workflow automation and an AI agent for message analysis. When a lead accepts a LinkedIn connection request, their information is automatically stored in Airtable for tracking. If the lead replies to the outreach message, the response is analyzed by an AI agent that classifies whether the lead is interested or not interested. If interested, the system automatically stores the lead in the CRM and sends a Slack notification so the team can follow up immediately. If not interested, the system does not add the lead to the CRM but sends a Slack notification for review. This automation removes manual lead qualification and ensures responses are processed in real time.",
+    results: [
+      "⚡ Automated lead qualification — AI analyzes LinkedIn replies instantly",
+      "📥 Automatic lead capture — accepted connections stored in Airtable",
+      "🔔 Real-time notifications — Slack alerts for interested and non-interested responses",
+      "🎯 Faster sales follow-up — interested leads immediately pushed to CRM",
+      "📈 Reduced manual work — eliminates manual response review and lead tracking",
+      "🔄 Scalable outreach process — handles high volumes of LinkedIn responses automatically",
+    ],
+  },
 ];
 
 const WorksSection = () => {
@@ -84,7 +101,7 @@ const WorksSection = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
           {projects.map((project, index) => (
             <div
               key={project.id}
