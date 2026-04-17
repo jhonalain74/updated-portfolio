@@ -10,6 +10,7 @@ import leadQualificationImg from "@/assets/lead-qualification.png";
 import emailDashboardImg from "@/assets/email-dashboard.png";
 import heyreachAutomationImg from "@/assets/heyreach-automation.png";
 import instantlyToCrmImg from "@/assets/instantly-to-crm.png";
+import transcriptAutomationImg from "@/assets/transcript-automation.png";
 
 interface Project {
   id: string;
@@ -94,6 +95,22 @@ const projects: Project[] = [
       "⚡ Improved sales response time to inbound replies",
       "📂 Created a centralized record of all engaged prospects in the CRM",
       "🚀 Increased operational efficiency by automating the lead tracking process",
+    ],
+  },
+  {
+    id: "transcript-automation",
+    title: "Transcript Summarization Automation",
+    category: "n8n Workflow",
+    image: transcriptAutomationImg,
+    problem: "After client and internal calls, meeting transcripts pile up in cloud storage without anyone reviewing them. Teams have to manually download files, read through long transcripts, write summaries, document them in Notion, and notify the right Slack channels. This process is slow, inconsistent, and key decisions or action items often get lost — delaying follow-ups across client, supplier, and internal teams.",
+    solution: "Built an end-to-end transcript summarization workflow in n8n. The automation triggers when a new transcript is uploaded to OneDrive, downloads the file, and extracts the text. The transcript filename is parsed to determine the meeting type (client, supplier, or internal team), then an AI agent powered by Anthropic Claude analyzes the content and produces a structured summary with key discussion points, decisions, and action items. A Switch node routes the summary to the correct destination — creating a properly formatted Notion page in the matching database and posting a clean summary message to the appropriate Slack channel (#client-updates, #supplier-updates, or #team-updates).",
+    results: [
+      "🤖 AI-generated summaries — Claude analyzes transcripts and extracts key points automatically",
+      "📝 Auto-documented in Notion — structured pages created in the right database every time",
+      "🔔 Smart Slack routing — summaries posted to client, supplier, or internal channels based on meeting type",
+      "⏱️ Eliminated manual review — transcripts processed within seconds of being uploaded",
+      "🎯 Consistent format — every meeting documented the same way across the organization",
+      "🔄 Fully hands-off — from OneDrive upload to Notion + Slack with zero manual steps",
     ],
   },
 ];
