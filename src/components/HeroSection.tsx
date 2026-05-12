@@ -1,33 +1,30 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail, BarChart3, Brain, Code2, TrendingUp } from "lucide-react";
-import avatarImage from "@/assets/avatar.png";
+import { useState, useEffect, useCallback } from "react";
 
-const FloatingIcon = ({ 
-  icon: Icon, 
-  className, 
-  delay = "0s",
-  size = "w-8 h-8"
-}: { 
-  icon: React.ElementType; 
-  className?: string; 
-  delay?: string;
-  size?: string;
-}) => (
-  <div 
-    className={`absolute bg-card/80 backdrop-blur-xl border border-primary/30 rounded-2xl flex items-center justify-center animate-float-slow shadow-lg ${className}`}
-    style={{ 
-      animationDelay: delay,
-      boxShadow: '0 8px 32px hsl(250 85% 65% / 0.2)'
-    }}
-  >
-    <Icon className={`${size} text-primary`} />
-  </div>
-);
+const highlights = [
+  { text: "Reduced operational workload by up to", metric: "80%" },
+  { text: "Automated reporting pipelines saving", metric: "20+ hrs/week" },
+  { text: "Built AI workflows boosting efficiency by", metric: "3×" },
+  { text: "Designed dashboards driving", metric: "faster decisions" },
+  { text: "Integrated smart alerts cutting response time by", metric: "60%" },
+];
 
 const HeroSection = () => {
-  const scrollToContact = () => {
-    document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const [robotLoaded, setRobotLoaded] = useState(false);
+  const [currentHighlight, setCurrentHighlight] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const cycleHighlight = useCallback(() => {
+    setIsAnimating(true);
+    setTimeout(() => {
+      setCurrentHighlight((prev) => (prev + 1) % highlights.length);
+      setIsAnimating(false);
+    }, 400);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(cycleHighlight, 3500);
+    return () => clearInterval(interval);
+  }, [cycleHighlight]);
 
   const scrollToProjects = () => {
     document.querySelector("#works")?.scrollIntoView({ behavior: "smooth" });
@@ -36,131 +33,107 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 pb-16"
+      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-16 pb-4"
     >
-      {/* Deep gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/30 to-background" />
-      
-      {/* Large decorative blobs */}
-      <div className="absolute top-20 right-20 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] animate-blob" />
-      <div className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-accent/15 rounded-full blur-[100px] animate-blob" style={{ animationDelay: '2s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px]" />
+      <div className="w-full max-w-5xl mx-auto px-4 relative z-10 flex flex-col items-center">
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
-          {/* Text Content */}
-          <div className="text-center lg:text-left order-2 lg:order-1">
-            <h1 
-              className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0 animate-fade-in leading-tight"
-              style={{ animationDelay: "0.1s" }}
-            >
-              <span className="text-foreground">Data </span>
-              <span className="text-gradient-primary">Analyst</span>
-              <span className="text-foreground"> & </span>
-              <br className="hidden sm:block" />
-              <span className="text-foreground">AI </span>
-              <span className="text-gradient-primary">Automation</span>
-              <span className="text-foreground"> Specialist</span>
-            </h1>
+        {/* Top — 3D Robot (centered) */}
+        <div className="relative w-full max-w-[280px] md:max-w-[340px] aspect-square mb-0">
+          {/* Glow behind the robot */}
+          <div
+            className="absolute inset-0 rounded-full blur-[80px] opacity-30 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, hsl(215 85% 60% / 0.4) 0%, transparent 70%)",
+            }}
+          />
 
-            <p 
-              className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed opacity-0 animate-fade-in"
-              style={{ animationDelay: "0.2s" }}
-            >
-              I transform raw data into{" "}
-              <span className="text-foreground font-medium">actionable insights</span> and 
-              manual workflows into{" "}
-              <span className="text-foreground font-medium">intelligent automated systems</span>—helping 
-              businesses make smarter decisions and scale efficiently.
-            </p>
-
-            <div 
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 opacity-0 animate-fade-in"
-              style={{ animationDelay: "0.3s" }}
-            >
-              <Button 
-                variant="neon" 
-                size="lg" 
-                onClick={scrollToProjects}
-                className="group w-full sm:w-auto"
-              >
-                View Featured Projects
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <Button 
-                variant="neonOutline" 
-                size="lg" 
-                onClick={scrollToContact}
-                className="w-full sm:w-auto"
-              >
-                <Mail className="mr-2 h-5 w-5" />
-                Contact Me
-              </Button>
+          {/* Loading spinner */}
+          {!robotLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <div className="w-14 h-14 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
             </div>
-          </div>
+          )}
 
-          {/* Avatar with Premium Fintech Design */}
-          <div 
-            className="order-1 lg:order-2 flex justify-center lg:justify-end opacity-0 animate-fade-in relative"
-            style={{ animationDelay: "0.2s" }}
+          {/* Spline 3D Scene */}
+          <div
+            className="w-full h-full relative"
+            style={{
+              clipPath: "inset(0 0 16% 0)",
+            }}
           >
-            <div className="relative group">
-              {/* Outer glow ring */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 md:w-88 md:h-88 lg:w-[420px] lg:h-[420px] rounded-full border border-primary/20 animate-[spin_40s_linear_infinite]" />
-              
-              {/* Large decorative circle - indigo/purple gradient */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-br from-primary/30 via-accent/20 to-primary/30 group-hover:scale-105 transition-transform duration-500" />
-              
-              {/* Inner solid indigo/purple circle */}
-              <div 
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full opacity-95 group-hover:scale-105 transition-transform duration-500"
-                style={{
-                  background: 'linear-gradient(135deg, hsl(250 70% 55%) 0%, hsl(240 60% 45%) 100%)',
-                  boxShadow: '0 0 80px hsl(250 85% 65% / 0.4), inset 0 0 60px hsl(250 85% 65% / 0.2)'
-                }}
-              />
-              
-              {/* Floating tech icons */}
-              <FloatingIcon 
-                icon={BarChart3} 
-                className="w-14 h-14 top-0 -left-4 md:top-4 md:-left-8" 
-                delay="0s"
-              />
-              <FloatingIcon 
-                icon={Brain} 
-                className="w-16 h-16 -top-8 right-8 md:-top-4 md:right-12" 
-                delay="0.5s"
-                size="w-8 h-8"
-              />
-              <FloatingIcon 
-                icon={Code2} 
-                className="w-14 h-14 bottom-20 -right-4 md:bottom-24 md:-right-8" 
-                delay="1s"
-              />
-              <FloatingIcon 
-                icon={TrendingUp} 
-                className="w-12 h-12 bottom-8 left-0 md:bottom-12 md:-left-4" 
-                delay="1.5s"
-                size="w-6 h-6"
-              />
-              
-              {/* Avatar image container */}
-              <div className="relative z-10 animate-avatar-float group-hover:scale-[1.02] transition-transform duration-500">
-                <img 
-                  src={avatarImage} 
-                  alt="Jhon Gennes Alain - Data Analyst & AI Automation Specialist"
-                  className="w-72 h-auto md:w-80 lg:w-96 object-contain relative z-10"
-                  style={{
-                    filter: 'drop-shadow(0 20px 40px hsl(0 0% 0% / 0.5))',
-                    maskImage: 'radial-gradient(ellipse 90% 90% at 50% 48%, black 65%, transparent 100%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 90% 90% at 50% 48%, black 65%, transparent 100%)',
-                  }}
-                />
-              </div>
+            <iframe
+              src="https://my.spline.design/genkubgreetingrobot-CsaQDDcEjwx1DfYmVv4gJhAb/"
+              frameBorder="0"
+              title="GENKUB - Interactive 3D Greeting Robot"
+              onLoad={() => setRobotLoaded(true)}
+              style={{
+                border: "none",
+                width: "100%",
+                height: "100%",
+                opacity: robotLoaded ? 1 : 0,
+                transition: "opacity 0.5s ease-in",
+              }}
+              allow="autoplay"
+            />
+          </div>
+        </div>
 
-              {/* Ground glow effect */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-8 bg-gradient-to-t from-primary/30 to-transparent rounded-full blur-xl" />
-            </div>
+        {/* Rotating Pill Badge */}
+        <div
+          className="mb-4 opacity-0 animate-fade-in"
+          style={{ animationDelay: "0.15s" }}
+        >
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-card/60 backdrop-blur-md border border-primary/20 text-sm font-medium shadow-lg min-w-[320px] justify-center">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_hsl(215_85%_60%)]" />
+            <span
+              className={`text-muted-foreground transition-all duration-400 ${
+                isAnimating
+                  ? "opacity-0 translate-y-2"
+                  : "opacity-100 translate-y-0"
+              }`}
+            >
+              {highlights[currentHighlight].text}{" "}
+              <span className="text-primary font-semibold">
+                {highlights[currentHighlight].metric}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        {/* Headline (centered, bigger, higher) */}
+        <h1
+          className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0 animate-fade-in leading-[1.1] tracking-tight text-center"
+          style={{ animationDelay: "0.25s" }}
+        >
+          <span
+            className="text-foreground"
+            style={{ textShadow: "0 0 30px hsl(215 85% 60% / 0.15)" }}
+          >
+            Data Analyst &
+          </span>
+          <br />
+          <span
+            className="text-gradient-primary"
+            style={{
+              filter: "drop-shadow(0 0 20px hsl(215 85% 60% / 0.3))",
+            }}
+          >
+            AI Automation Specialist
+          </span>
+        </h1>
+
+        {/* Scroll Indicator — interactive with hover glow */}
+        <div
+          className="group flex flex-col items-center gap-2 opacity-0 animate-fade-in cursor-pointer transition-all duration-300"
+          style={{ animationDelay: "0.45s" }}
+          onClick={scrollToProjects}
+        >
+          <span className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase group-hover:text-primary transition-colors duration-300">
+            Scroll to explore
+          </span>
+          <div className="w-7 h-11 rounded-full border-2 border-muted-foreground/40 flex justify-center p-1.5 group-hover:border-primary/60 group-hover:shadow-[0_0_15px_hsl(215_85%_60%/_0.3)] transition-all duration-300">
+            <div className="w-1.5 h-2 rounded-full bg-primary animate-[bounce_2s_infinite]" />
           </div>
         </div>
       </div>
