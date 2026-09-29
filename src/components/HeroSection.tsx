@@ -1,139 +1,135 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
+import { ArrowRight, CalendarDays } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CALENDLY_URL } from "@/lib/site";
 
-const highlights = [
-  { text: "Reduced operational workload by up to", metric: "80%" },
-  { text: "Automated reporting pipelines saving", metric: "20+ hrs/week" },
-  { text: "Built AI workflows boosting efficiency by", metric: "3×" },
-  { text: "Designed dashboards driving", metric: "faster decisions" },
-  { text: "Integrated smart alerts cutting response time by", metric: "60%" },
-];
+/* The Spline scene always renders at this size and is scaled to fit its box. Its
+   "Built with Spline" badge is a fixed pixel size, so scaling the whole scene keeps
+   the badge inside the clipped bottom 16% on every screen size. */
+const SCENE_SIZE = 460;
 
 const HeroSection = () => {
   const [robotLoaded, setRobotLoaded] = useState(false);
-  const [currentHighlight, setCurrentHighlight] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const cycleHighlight = useCallback(() => {
-    setIsAnimating(true);
-    setTimeout(() => {
-      setCurrentHighlight((prev) => (prev + 1) % highlights.length);
-      setIsAnimating(false);
-    }, 400);
-  }, []);
+  const robotBoxRef = useRef<HTMLDivElement>(null);
+  const [robotScale, setRobotScale] = useState(1);
 
   useEffect(() => {
-    const interval = setInterval(cycleHighlight, 3500);
-    return () => clearInterval(interval);
-  }, [cycleHighlight]);
-
-  const scrollToProjects = () => {
-    document.querySelector("#works")?.scrollIntoView({ behavior: "smooth" });
-  };
+    const box = robotBoxRef.current;
+    if (!box) return;
+    const observer = new ResizeObserver(([entry]) =>
+      setRobotScale(entry.contentRect.width / SCENE_SIZE)
+    );
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-16 pb-4"
+      className="relative flex flex-col justify-center overflow-hidden pb-16 pt-24 lg:min-h-[calc(100svh-15rem)] lg:pb-12"
     >
-      <div className="w-full max-w-5xl mx-auto px-4 relative z-10 flex flex-col items-center">
+      {/* Ambient glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/4 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-primary/10 blur-[140px] lg:left-auto lg:right-[8%] lg:translate-x-0"
+      />
 
-        {/* Top — 3D Robot (centered) */}
-        <div className="relative w-full max-w-[280px] md:max-w-[340px] aspect-square mb-0">
-          {/* Glow behind the robot */}
-          <div
-            className="absolute inset-0 rounded-full blur-[80px] opacity-30 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle, hsl(215 85% 60% / 0.4) 0%, transparent 70%)",
-            }}
-          />
-
-          {/* Loading spinner */}
-          {!robotLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center z-10">
-              <div className="w-14 h-14 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
-            </div>
-          )}
-
-          {/* Spline 3D Scene */}
-          <div
-            className="w-full h-full relative"
-            style={{
-              clipPath: "inset(0 0 16% 0)",
-            }}
-          >
-            <iframe
-              src="https://my.spline.design/genkubgreetingrobot-CsaQDDcEjwx1DfYmVv4gJhAb/"
-              frameBorder="0"
-              title="GENKUB - Interactive 3D Greeting Robot"
-              onLoad={() => setRobotLoaded(true)}
-              style={{
-                border: "none",
-                width: "100%",
-                height: "100%",
-                opacity: robotLoaded ? 1 : 0,
-                transition: "opacity 0.5s ease-in",
-              }}
-              allow="autoplay"
-            />
-          </div>
-        </div>
-
-        {/* Rotating Pill Badge */}
-        <div
-          className="mb-4 opacity-0 animate-fade-in"
-          style={{ animationDelay: "0.15s" }}
-        >
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-card/60 backdrop-blur-md border border-primary/20 text-sm font-medium shadow-lg min-w-[320px] justify-center">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_hsl(215_85%_60%)]" />
-            <span
-              className={`text-muted-foreground transition-all duration-400 ${
-                isAnimating
-                  ? "opacity-0 translate-y-2"
-                  : "opacity-100 translate-y-0"
-              }`}
+      <div className="shell relative z-10">
+        <div className="grid items-center gap-6 lg:grid-cols-[1.15fr_1fr] lg:gap-10">
+          {/* Copy */}
+          <div className="order-2 flex flex-col items-center text-center lg:order-1 lg:items-start lg:text-left">
+            <div
+              className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-border bg-card/60 px-4 py-2 text-xs text-muted-foreground backdrop-blur-md opacity-0 animate-fade-in sm:text-sm"
+              style={{ animationDelay: "0.1s" }}
             >
-              {highlights[currentHighlight].text}{" "}
-              <span className="text-primary font-semibold">
-                {highlights[currentHighlight].metric}
+              <span className="relative flex h-2 w-2 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
               </span>
-            </span>
+              <span>
+                Open to contract &amp; full-time roles
+                <span className="hidden sm:inline"> · Remote, any timezone</span>
+              </span>
+            </div>
+
+            <h1
+              className="font-heading text-[2.6rem] font-bold leading-[1.05] tracking-tight opacity-0 animate-fade-in sm:text-5xl xl:text-[3.5rem]"
+              style={{ animationDelay: "0.2s" }}
+            >
+              <span className="text-foreground">Data &amp; AI</span>
+              <br />
+              <span className="text-gradient-primary">Automation Engineer</span>
+            </h1>
+
+            <p
+              className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground opacity-0 animate-fade-in md:text-lg"
+              style={{ animationDelay: "0.3s" }}
+            >
+              I build sales and revenue automation, AI-powered workflows, and executive dashboards,
+              so teams stop doing repetitive work by hand and make decisions from clean data.
+            </p>
+
+            <div
+              className="mt-8 flex flex-wrap justify-center gap-3 opacity-0 animate-fade-in lg:justify-start"
+              style={{ animationDelay: "0.4s" }}
+            >
+              <Button asChild variant="neon" size="lg">
+                <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer">
+                  <CalendarDays />
+                  Book a Call
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="group border-border bg-card/40 backdrop-blur-md hover:border-primary/50 hover:bg-card hover:text-foreground"
+              >
+                <a href="#works">
+                  View My Work
+                  <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                </a>
+              </Button>
+            </div>
           </div>
-        </div>
 
-        {/* Headline (centered, bigger, higher) */}
-        <h1
-          className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0 animate-fade-in leading-[1.1] tracking-tight text-center"
-          style={{ animationDelay: "0.25s" }}
-        >
-          <span
-            className="text-foreground"
-            style={{ textShadow: "0 0 30px hsl(215 85% 60% / 0.15)" }}
-          >
-            Data Analyst &
-          </span>
-          <br />
-          <span
-            className="text-gradient-primary"
-            style={{
-              filter: "drop-shadow(0 0 20px hsl(215 85% 60% / 0.3))",
-            }}
-          >
-            AI Automation Specialist
-          </span>
-        </h1>
+          {/* 3D Robot */}
+          <div className="order-1 mx-auto w-full max-w-[240px] sm:max-w-[300px] lg:order-2 lg:max-w-[440px]">
+            {/* Negative margin reclaims the 16% clipped off the bottom (Spline watermark) */}
+            <div ref={robotBoxRef} className="relative -mb-[16%] aspect-square">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-full opacity-40 blur-[80px]"
+                style={{
+                  background: "radial-gradient(circle, hsl(var(--primary) / 0.35) 0%, transparent 70%)",
+                }}
+              />
 
-        {/* Scroll Indicator — interactive with hover glow */}
-        <div
-          className="group flex flex-col items-center gap-2 opacity-0 animate-fade-in cursor-pointer transition-all duration-300"
-          style={{ animationDelay: "0.45s" }}
-          onClick={scrollToProjects}
-        >
-          <span className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase group-hover:text-primary transition-colors duration-300">
-            Scroll to explore
-          </span>
-          <div className="w-7 h-11 rounded-full border-2 border-muted-foreground/40 flex justify-center p-1.5 group-hover:border-primary/60 group-hover:shadow-[0_0_15px_hsl(215_85%_60%/_0.3)] transition-all duration-300">
-            <div className="w-1.5 h-2 rounded-full bg-primary animate-[bounce_2s_infinite]" />
+              {!robotLoaded && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                  <div className="h-14 w-14 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+                </div>
+              )}
+
+              <div className="absolute inset-0" style={{ clipPath: "inset(0 0 16% 0)" }}>
+                <iframe
+                  src="https://my.spline.design/genkubgreetingrobot-CsaQDDcEjwx1DfYmVv4gJhAb/"
+                  frameBorder="0"
+                  title="GENKUB - Interactive 3D Greeting Robot"
+                  onLoad={() => setRobotLoaded(true)}
+                  style={{
+                    border: "none",
+                    width: SCENE_SIZE,
+                    height: SCENE_SIZE,
+                    transform: `scale(${robotScale})`,
+                    transformOrigin: "top left",
+                    opacity: robotLoaded ? 1 : 0,
+                    transition: "opacity 0.5s ease-in",
+                  }}
+                  allow="autoplay"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

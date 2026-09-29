@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         heading: ['Space Grotesk', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Consolas', 'monospace'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -53,13 +54,6 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
-        },
-        purple: {
-          primary: "hsl(var(--purple-primary))",
-          secondary: "hsl(var(--purple-secondary))",
-        },
-        indigo: {
-          deep: "hsl(var(--indigo-deep))",
         },
       },
       borderRadius: {

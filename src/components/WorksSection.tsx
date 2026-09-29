@@ -1,35 +1,185 @@
-import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import {
+  Bot,
+  Boxes,
+  CalendarDays,
+  CheckCircle2,
+  CircleAlert,
+  Clock,
+  FileCheck,
+  Layers,
+  Lightbulb,
+  Maximize2,
+  MessageSquareText,
+  Network,
+  RefreshCw,
+  Split,
+  Terminal,
+  Timer,
+  TrendingUp,
+  UserX,
+  Video,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import ImageLightbox from "@/components/ImageLightbox";
+import Reveal from "@/components/Reveal";
+import ProjectCarousel from "@/components/ProjectCarousel";
+import SectionHeading from "@/components/SectionHeading";
+import { CALENDLY_URL } from "@/lib/site";
+import { cn } from "@/lib/utils";
 import leadEnrichmentImg from "@/assets/lead-enrichment.png";
 import leadQualificationImg from "@/assets/lead-qualification.png";
 import emailDashboardImg from "@/assets/email-dashboard.png";
 import heyreachAutomationImg from "@/assets/heyreach-automation.png";
 import instantlyToCrmImg from "@/assets/instantly-to-crm.png";
 import transcriptAutomationImg from "@/assets/transcript-automation.png";
+import offboardingImg from "@/assets/offboarding-automation.png";
+import onboardingImg from "@/assets/onboarding-automation.png";
+import postCallFormImg from "@/assets/post-call-form.png";
+import d2cCadenceImg from "@/assets/d2c-confirmation-cadence.png";
+
+interface Stat {
+  icon: LucideIcon;
+  value: string;
+  label: string;
+  sub?: string;
+}
+
+/* One thing the build does; a label is shown in bold ahead of the text */
+type Step = string | { label: string; text: string };
 
 interface Project {
   id: string;
   title: string;
   category: string;
   image: string;
+  client?: string;
   subtitle?: string;
   problem: string;
   solution: string;
-  results: string[];
-  stats?: { icon: string; value: string; label: string; sub?: string }[];
+  steps?: Step[];
+  stepsNote?: string;
+  /* Either a list of outcomes or a single paragraph */
+  results: string | string[];
+  stats?: Stat[];
 }
 
-const featuredProjects: Project[] = [
+const projects: Project[] = [
+  {
+    id: "team-offboarding",
+    title: "One-Command Team Offboarding via Slack",
+    category: "HR Ops",
+    client: "High-ticket sales team",
+    image: offboardingImg,
+    problem:
+      "When a setter or closer left, an admin had to remove them from Google Workspace, Zoom and the scheduling platform one at a time. Steps got missed, so former reps kept their logins and paid license seats. Deleting accounts also wiped their call recordings for good.",
+    solution:
+      "A Slack slash command that opens an offboarding form. Only approved managers can use it, and they must tick a confirm box before it runs. On submit, a Make.com scenario:",
+    steps: [
+      "suspends the person's Google Workspace account",
+      "deactivates their Zoom user but keeps the recordings",
+      "removes them from OnceHub",
+      "marks them Inactive in the team roster, with an offboarding date",
+      "posts an audit message naming who ran it",
+    ],
+    stepsNote: "For setters it skips the Zoom and scheduling steps automatically.",
+    results:
+      "Offboarding is now one command instead of a checklist. Every step can be undone, and the recorded exit dates feed a commission clawback check.",
+    stats: [
+      { icon: Terminal, value: "1", label: "Slack Command" },
+      { icon: UserX, value: "3", label: "Accounts Revoked" },
+      { icon: Video, value: "0", label: "Recordings Lost" },
+    ],
+  },
+  {
+    id: "team-onboarding",
+    title: "Signed Contract to Day-One Access",
+    category: "HR Ops",
+    client: "High-ticket sales team",
+    image: onboardingImg,
+    problem:
+      "Every new setter or closer needed accounts in about six tools before their first shift. Admins created them by hand after the contract came back, so logins arrived one at a time and new hires started without CRM or training access.",
+    solution:
+      "A pipeline of two Make.com scenarios. The hire's application form sends them a SignNow agreement. As soon as they sign it, the second scenario:",
+    steps: [
+      "creates their Google Workspace account and emails them the login",
+      "invites them to Slack and Close CRM",
+      "signs them up on the training platform and enrolls them in two courses",
+      "for closers only, adds a licensed Zoom seat and a payment-platform team invite",
+      "adds them to the team roster and sends a welcome email for their role, plus invoice and payout dates",
+    ],
+    results:
+      "New hires get every login within about a minute of signing, and no admin has to do anything. Names are cleaned automatically (spaces and accents removed), so account creation doesn't fail on unusual names.",
+    stats: [
+      { icon: Timer, value: "~1 min", label: "Signature to Access" },
+      { icon: Boxes, value: "6", label: "Platforms Provisioned" },
+      { icon: Bot, value: "0 hrs", label: "Manual Setup" },
+    ],
+  },
+  {
+    id: "post-call-form",
+    title: "Post-Call Form to CRM, Reporting & Slack",
+    category: "Sales Ops",
+    client: "High-ticket sales team",
+    image: postCallFormImg,
+    problem:
+      "After every sales call, closers had to report the outcome in the CRM, the tracking sheet and Slack. Updates were late or skipped, setters lost credit for calls they booked, and managers couldn't trust the numbers behind commissions and dashboards.",
+    solution:
+      "A Jotform post-call form that fills in the lead, closer and setter from Close CRM, so the closer only records what happened. Make.com sorts each submission into one of six outcomes: no-show, cancelled, rescheduled, passed back to a setter, showed with no sale, or closed with cash. Every outcome writes a row to the central reporting sheet and posts to the right Slack channel. Then, depending on the outcome:",
+    steps: [
+      "closed deals also update Close and post to the wins channel with the amount",
+      "no-shows go into an ActiveCampaign nurture list",
+      "social-media leads also go to the social team's channel",
+    ],
+    results:
+      "One form replaces four manual updates. The sheet feeds the sales dashboards and commission reports, and setter credit is taken from the booking itself, not from anyone's memory.",
+    stats: [
+      { icon: Split, value: "6", label: "Outcome Routes" },
+      { icon: Network, value: "4", label: "Systems From One Form" },
+      { icon: FileCheck, value: "0 hrs", label: "Manual Reporting" },
+    ],
+  },
+  {
+    id: "d2c-confirmation",
+    title: "Direct-Booking Confirmation Cadence",
+    category: "Lead Conversion",
+    client: "High-ticket sales team",
+    image: d2cCadenceImg,
+    problem:
+      "Leads who booked straight from an ad landed on a closer's calendar without talking to anyone first. Nobody owned confirming them, so reminders depended on whoever remembered, and no-shows used up closers' time.",
+    solution: "Two Make.com scenarios:",
+    steps: [
+      {
+        label: "Instant confirmation",
+        text: 'Every new booking gets a confirmation text written for direct bookers within seconds. If the lead replies "YES", they\'re marked Confirmed in Close.',
+      },
+      {
+        label: "Follow-up cadence",
+        text: "Every 15 minutes, a second scenario sorts unconfirmed leads by how soon their call is: 24+ hours, 4–24 hours, or under 4 hours. It schedules the next touch and drafts a personal text in Close for the confirmation setter to send. A lead only moves to the next step after a call is logged, and drops out once confirmed.",
+      },
+    ],
+    stepsNote: "Two Close smart views give setters a call queue and a reply inbox.",
+    results:
+      "Every direct booking gets confirmed within seconds and a follow-up plan matched to how soon its call is. Setters work from a queue, and every text is a draft that a person reviews before it goes out.",
+    stats: [
+      { icon: MessageSquareText, value: "~20 sec", label: "First Confirmation Text" },
+      { icon: RefreshCw, value: "15 min", label: "Cadence Check" },
+      { icon: Layers, value: "3", label: "Lead-Time Lanes" },
+    ],
+  },
   {
     id: "email-dashboard",
     title: "Email Campaign Dashboard",
-    category: "DATA ANALYTICS",
+    category: "Data Analytics",
     subtitle: "Turning email data into actionable engagement insights",
     image: emailDashboardImg,
     problem:
@@ -43,15 +193,15 @@ const featuredProjects: Project[] = [
       "⏱️ Faster decision-making with a centralized dashboard, reducing analysis time from hours to minutes",
     ],
     stats: [
-      { icon: "📊", value: "85%", label: "Faster Analysis", sub: "Hours → Minutes" },
-      { icon: "📈", value: "3x", label: "Engagement", sub: "Improved targeting" },
-      { icon: "⏱️", value: "10min", label: "Setup Time", sub: "Per campaign" },
+      { icon: Zap, value: "85%", label: "Faster Analysis", sub: "Hours → Minutes" },
+      { icon: TrendingUp, value: "3x", label: "Engagement", sub: "Improved targeting" },
+      { icon: Clock, value: "10min", label: "Setup Time", sub: "Per campaign" },
     ],
   },
   {
     id: "lead-enrichment",
     title: "Lead Enrichment Pipeline",
-    category: "AUTOMATION",
+    category: "Sales Ops",
     subtitle: "Automated lead research that scales with zero manual effort",
     image: leadEnrichmentImg,
     problem:
@@ -66,18 +216,15 @@ const featuredProjects: Project[] = [
       "🎯 Improved outreach quality using verified, enriched contact data",
     ],
     stats: [
-      { icon: "⏱️", value: "99%", label: "Time Saved", sub: "15min → 10sec" },
-      { icon: "✅", value: "85%", label: "Enrichment", sub: "Success rate" },
-      { icon: "🔄", value: "0", label: "Manual Work", sub: "Fully automated" },
+      { icon: Timer, value: "99%", label: "Time Saved", sub: "15min → 10sec" },
+      { icon: CheckCircle2, value: "85%", label: "Enrichment", sub: "Success rate" },
+      { icon: Bot, value: "0", label: "Manual Work", sub: "Fully automated" },
     ],
   },
-];
-
-const moreProjects: Project[] = [
   {
     id: "b2b-automation",
     title: "B2B Lead Automation",
-    category: "n8n Workflow",
+    category: "Lead Qualification",
     image: leadQualificationImg,
     problem:
       "B2B teams receive high volumes of leads that are often duplicated, inconsistently formatted, and poorly qualified, causing Sales to waste time on low-intent prospects while Marketing lacks a structured nurture process.",
@@ -93,7 +240,7 @@ const moreProjects: Project[] = [
   {
     id: "heyreach-automation",
     title: "LinkedIn Outreach Automation",
-    category: "n8n Workflow",
+    category: "Sales Outreach",
     image: heyreachAutomationImg,
     problem:
       "LinkedIn outreach campaigns can generate many connection acceptances and replies, but tracking and qualifying these leads manually is inefficient.",
@@ -109,7 +256,7 @@ const moreProjects: Project[] = [
   {
     id: "instantly-to-crm",
     title: "Instantly Reply to CRM",
-    category: "n8n Workflow",
+    category: "CRM Automation",
     image: instantlyToCrmImg,
     problem:
       "The sales team was running email outreach campaigns through Instantly, but replies from prospects were not automatically tracked or centralized.",
@@ -125,7 +272,7 @@ const moreProjects: Project[] = [
   {
     id: "transcript-automation",
     title: "Transcript Summarization",
-    category: "n8n Workflow",
+    category: "AI Automation",
     image: transcriptAutomationImg,
     problem:
       "After client and internal calls, meeting transcripts pile up in cloud storage without anyone reviewing them.",
@@ -140,234 +287,231 @@ const moreProjects: Project[] = [
   },
 ];
 
-/* ─── Featured Card (large, image-left / text-right) ─── */
-const FeaturedCard = ({
-  project,
-  index,
-  onOpen,
-}: {
-  project: Project;
-  index: number;
-  onOpen: (p: Project) => void;
-}) => (
-  <div
-    className="group grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-2xl overflow-hidden bg-card/60 border border-border/50 opacity-0 animate-fade-in cursor-pointer hover:border-primary/30 transition-all duration-500"
-    style={{ animationDelay: `${0.15 * (index + 1)}s` }}
-    onClick={() => onOpen(project)}
-  >
-    {/* Left — Image */}
-    <div className="relative overflow-hidden aspect-video lg:aspect-auto lg:min-h-[280px]">
-      <img
-        src={project.image}
-        alt={project.title}
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/30" />
-    </div>
-
-    {/* Right — Details */}
-    <div className="p-6 flex flex-col justify-center">
-      <span className="text-xs font-semibold tracking-[0.15em] text-primary mb-3 uppercase">
-        {project.category}
-      </span>
-      <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground mb-2 leading-tight">
-        {project.title}
-      </h3>
-      <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-        {project.subtitle || project.problem.slice(0, 160) + "..."}
-      </p>
-
-      {/* Stats Row */}
-      {project.stats && (
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          {project.stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-lg bg-background/60 border border-border/40 p-2.5 text-center"
-            >
-              <span className="text-xs">{stat.icon}</span>
-              <div className="text-base font-bold text-primary mt-1">
-                {stat.value}
-              </div>
-              <div className="text-[11px] font-medium text-foreground">
-                {stat.label}
-              </div>
-              {stat.sub && (
-                <div className="text-[10px] text-muted-foreground">{stat.sub}</div>
-              )}
-            </div>
-          ))}
+const StatGrid = ({ stats }: { stats: Stat[] }) => (
+  <div className="grid grid-cols-3 gap-3">
+    {stats.map((stat) => (
+      <div
+        key={stat.label}
+        className="rounded-xl border border-border/50 bg-background/50 p-3 text-center"
+      >
+        <stat.icon className="mx-auto h-4 w-4 text-accent" />
+        <div className="mt-2 font-heading text-xl font-bold">
+          <span className="text-gradient-primary">{stat.value}</span>
         </div>
-      )}
-
-      <div className="flex items-center gap-2 text-sm font-medium text-primary group-hover:gap-3 transition-all duration-300">
-        View Case Study <ArrowRight className="w-4 h-4" />
+        <div className="text-[11px] font-medium text-foreground">{stat.label}</div>
+        {stat.sub && <div className="text-[10px] text-muted-foreground">{stat.sub}</div>}
       </div>
-    </div>
+    ))}
   </div>
 );
 
-/* ─── Carousel ─── */
-const Carousel = ({
-  projects,
-  onOpen,
+const CaseBlock = ({
+  icon: Icon,
+  tone,
+  title,
+  children,
 }: {
-  projects: Project[];
-  onOpen: (p: Project) => void;
-}) => {
-  const duplicated = [...projects, ...projects];
-
-  return (
-    <div className="relative overflow-hidden">
-      {/* Edge fade gradients */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-
-      {/* Scrolling track — CSS animation like Tools section, but slower */}
-      <div className="flex gap-5 w-max animate-[scroll-left_50s_linear_infinite] hover:[animation-play-state:paused]">
-        {duplicated.map((project, i) => (
-          <div
-            key={`${project.id}-${i}`}
-            className="group flex-shrink-0 w-[320px] rounded-2xl overflow-hidden bg-card/60 border border-border/50 cursor-pointer hover:border-primary/30 transition-all duration-400"
-            onClick={() => onOpen(project)}
-          >
-            <div className="relative aspect-video overflow-hidden">
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-            </div>
-            <div className="p-5">
-              <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                {project.category}
-              </span>
-              <h4 className="font-heading text-base font-bold mt-3 text-foreground group-hover:text-primary transition-colors duration-300">
-                {project.title}
-              </h4>
-              <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
-                {project.problem.slice(0, 100)}...
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+  icon: LucideIcon;
+  tone: string;
+  title: string;
+  children: ReactNode;
+}) => (
+  <div>
+    <h4 className="flex items-center gap-3 font-heading text-lg font-semibold text-foreground">
+      <span className={cn("grid h-8 w-8 place-items-center rounded-lg", tone)}>
+        <Icon className="h-4 w-4" />
+      </span>
+      {title}
+    </h4>
+    <div className="mt-3 md:pl-11">{children}</div>
+  </div>
+);
 
 /* ─── Main Section ─── */
 const WorksSection = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [imageOpen, setImageOpen] = useState(false);
+
+  // Links like "#case-lead-enrichment" (e.g. from the results band) open that case study
+  useEffect(() => {
+    const openFromHash = () => {
+      const project = projects.find((p) => window.location.hash === `#case-${p.id}`);
+      if (!project) return;
+      document.getElementById("works")?.scrollIntoView({ behavior: "instant" });
+      setSelectedProject(project);
+    };
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    return () => window.removeEventListener("hashchange", openFromHash);
+  }, []);
+
+  const closeCaseStudy = () => {
+    setSelectedProject(null);
+    setImageOpen(false);
+    // Clear the "#case-…" hash so the same link opens the case study again next time
+    if (window.location.hash.startsWith("#case-")) {
+      history.replaceState(null, "", "#works");
+    }
+  };
 
   return (
-    <section id="works" className="py-24 relative">
+    <section id="works" className="relative py-20 md:py-24">
       {/* Background accent */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent" />
-      <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 left-1/3 h-[500px] w-[500px] rounded-full bg-accent/5 blur-[150px]"
+      />
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-14">
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gradient-primary mb-4">
-            Featured Projects
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            A look inside end-to-end operations systems I've built.
-          </p>
-        </div>
-
-        {/* ── Featured Projects (large cards) ── */}
-        <div className="flex flex-col gap-6 max-w-5xl mx-auto mb-14">
-          {featuredProjects.map((project, index) => (
-            <FeaturedCard
-              key={project.id}
-              project={project}
-              index={index}
-              onOpen={setSelectedProject}
-            />
-          ))}
-        </div>
-
-        {/* ── More Projects (carousel) ── */}
-        <div className="max-w-6xl mx-auto">
-          <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground mb-2 text-center">
-            More Projects
-          </h3>
-          <p className="text-muted-foreground text-sm text-center mb-8">
-            Explore additional automation workflows and systems
-          </p>
-          <Carousel projects={moreProjects} onOpen={setSelectedProject} />
-        </div>
+      <div className="shell relative z-10">
+        <SectionHeading
+          index="03"
+          eyebrow="Case Studies"
+          title={
+            <>
+              Featured <span className="text-gradient-primary">Projects</span>
+            </>
+          }
+          description="A look inside end-to-end operations systems I've built."
+          className="mb-2 md:mb-4"
+        />
       </div>
 
+      <Reveal className="relative z-10">
+        <ProjectCarousel items={projects} onOpen={(project) => setSelectedProject(project)} />
+      </Reveal>
+
       {/* Case Study Modal */}
-      <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-card border-border">
+      <Dialog open={!!selectedProject} onOpenChange={(open) => !open && closeCaseStudy()}>
+        <DialogContent className="max-h-[90vh] max-w-3xl gap-0 overflow-y-auto border-border/60 bg-card p-0 sm:rounded-2xl">
           {selectedProject && (
             <>
-              <DialogHeader className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-medium px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                    {selectedProject.category}
-                  </span>
-                </div>
-                <DialogTitle className="font-heading text-2xl md:text-3xl font-bold text-gradient-primary">
-                  {selectedProject.title}
-                </DialogTitle>
-              </DialogHeader>
+              <div className="space-y-8 p-6 md:p-8">
+                <DialogHeader className="space-y-3 pr-10 text-left">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <span className="w-fit rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                      {selectedProject.category}
+                    </span>
+                    {selectedProject.client && (
+                      <span className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+                        {selectedProject.client}
+                      </span>
+                    )}
+                  </div>
+                  <DialogTitle className="font-heading text-2xl font-bold leading-tight text-foreground md:text-3xl">
+                    {selectedProject.title}
+                  </DialogTitle>
+                  <DialogDescription
+                    className={cn("text-base", !selectedProject.subtitle && "sr-only")}
+                  >
+                    {selectedProject.subtitle ?? `Case study: ${selectedProject.title}`}
+                  </DialogDescription>
+                </DialogHeader>
 
-              {/* Project Image */}
-              <div className="rounded-xl overflow-hidden my-6">
-                <img
+                {/* Screenshots can be very tall, so cap the preview and open the full image in a viewer */}
+                <button
+                  type="button"
+                  onClick={() => setImageOpen(true)}
+                  aria-label={`View full-size screenshot of ${selectedProject.title}`}
+                  className="group/img relative block w-full overflow-hidden rounded-xl border border-border/50 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <img
+                    src={selectedProject.image}
+                    alt={`${selectedProject.title} preview`}
+                    className="max-h-[420px] w-full object-cover object-top transition-transform duration-700 group-hover/img:scale-[1.02]"
+                  />
+                  <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground backdrop-blur-md transition-opacity duration-300 md:opacity-0 md:group-hover/img:opacity-100 md:group-focus-visible/img:opacity-100">
+                    <Maximize2 className="h-3.5 w-3.5" />
+                    View full size
+                  </span>
+                </button>
+                <ImageLightbox
                   src={selectedProject.image}
-                  alt={selectedProject.title}
-                  className="w-full h-auto object-cover"
+                  alt={`${selectedProject.title} full-size screenshot`}
+                  title={selectedProject.title}
+                  open={imageOpen}
+                  onOpenChange={setImageOpen}
                 />
-              </div>
 
-              {/* Problem Section */}
-              <div className="space-y-3 mb-8">
-                <h4 className="font-heading text-xl font-semibold text-foreground flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-destructive/20 flex items-center justify-center text-destructive text-sm">
-                    ✕
-                  </span>
-                  The Problem
-                </h4>
-                <p className="text-muted-foreground leading-relaxed pl-10">
-                  {selectedProject.problem}
-                </p>
-              </div>
+                {selectedProject.stats && <StatGrid stats={selectedProject.stats} />}
 
-              {/* Solution Section */}
-              <div className="space-y-3 mb-8">
-                <h4 className="font-heading text-xl font-semibold text-foreground flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary text-sm">
-                    ✓
-                  </span>
-                  The Solution
-                </h4>
-                <p className="text-muted-foreground leading-relaxed pl-10">
-                  {selectedProject.solution}
-                </p>
-              </div>
+                <CaseBlock
+                  icon={CircleAlert}
+                  tone="bg-destructive/15 text-destructive"
+                  title="The Problem"
+                >
+                  <p className="leading-relaxed text-muted-foreground">{selectedProject.problem}</p>
+                </CaseBlock>
 
-              {/* Results Section */}
-              <div className="space-y-3">
-                <h4 className="font-heading text-xl font-semibold text-foreground flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center text-accent text-sm">
-                    📈
-                  </span>
-                  The Results
-                </h4>
-                <ul className="space-y-2 pl-10">
-                  {selectedProject.results.map((result, index) => (
-                    <li key={index} className="text-muted-foreground leading-relaxed">
-                      {result}
-                    </li>
-                  ))}
-                </ul>
+                <CaseBlock icon={Lightbulb} tone="bg-accent/15 text-accent" title="What I Built">
+                  <p className="leading-relaxed text-muted-foreground">
+                    {selectedProject.solution}
+                  </p>
+                  {selectedProject.steps && (
+                    <ul className="mt-4 space-y-2.5">
+                      {selectedProject.steps.map((step) => (
+                        <li
+                          key={typeof step === "string" ? step : step.label}
+                          className="flex gap-3 text-sm leading-relaxed text-foreground/85"
+                        >
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <span>
+                            {typeof step === "string" ? (
+                              step
+                            ) : (
+                              <>
+                                <span className="font-semibold text-foreground">{step.label}.</span>{" "}
+                                {step.text}
+                              </>
+                            )}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {selectedProject.stepsNote && (
+                    <p className="mt-4 rounded-xl border border-border/50 bg-background/50 px-4 py-3 text-sm text-muted-foreground">
+                      {selectedProject.stepsNote}
+                    </p>
+                  )}
+                </CaseBlock>
+
+                <CaseBlock
+                  icon={TrendingUp}
+                  tone="bg-primary/15 text-primary"
+                  title={Array.isArray(selectedProject.results) ? "The Results" : "The Result"}
+                >
+                  {Array.isArray(selectedProject.results) ? (
+                    <ul className="grid gap-2.5 sm:grid-cols-2">
+                      {selectedProject.results.map((result) => (
+                        <li
+                          key={result}
+                          className="rounded-xl border border-border/50 bg-background/50 px-4 py-3 text-sm leading-relaxed text-muted-foreground"
+                        >
+                          {result}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="leading-relaxed text-foreground/90">{selectedProject.results}</p>
+                  )}
+                </CaseBlock>
+
+                <div className="flex flex-col items-start gap-4 rounded-2xl border border-primary/20 bg-primary/5 p-5 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm">
+                    <span className="font-semibold text-foreground">Need something similar?</span>{" "}
+                    <span className="text-muted-foreground">Let's talk about your workflow.</span>
+                  </p>
+                  <Button asChild variant="neon" className="shrink-0">
+                    <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer">
+                      <CalendarDays />
+                      Book a Call
+                    </a>
+                  </Button>
+                </div>
               </div>
             </>
           )}

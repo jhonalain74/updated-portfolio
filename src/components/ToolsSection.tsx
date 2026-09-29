@@ -1,6 +1,8 @@
-const DV = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons";
+import Reveal from "@/components/Reveal";
+import SectionHeading from "@/components/SectionHeading";
+import { cn } from "@/lib/utils";
 
-/* Inline SVG data URIs for logos not available on devicon CDN */
+/* Inline SVG logos; the rest are devicon SVGs (MIT) served from /public/images/logos */
 const LOGOS = {
   // Power BI - yellow chart icon
   powerbi: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="13" y="2" width="4" height="20" rx="1" fill="#F2C811"/><rect x="7" y="7" width="4" height="15" rx="1" fill="#F2C811" opacity="0.8"/><rect x="1" y="12" width="4" height="10" rx="1" fill="#F2C811" opacity="0.6"/><rect x="19" y="5" width="4" height="17" rx="1" fill="#F2C811" opacity="0.9"/></svg>')}`,
@@ -39,16 +41,26 @@ const LOGOS = {
   // Calendly
   calendly: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#006BFF"/><path d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 6v8h12v-8zm2-4v2m8-2v2" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="12" cy="14" r="2" fill="white"/></svg>')}`,
   // Apollo
-  apollo: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 80 28" xmlns="http://www.w3.org/2000/svg"><g transform="translate(12,14)"><path d="M0-8l1.8 3.6 3.8.6-2.8 2.7.7 3.9L0 1l-3.5 1.8.7-3.9-2.8-2.7 3.8-.6z" fill="#E8E44A"/></g><text x="28" y="19" font-family="Arial,sans-serif" font-weight="700" font-size="15" fill="white">Apollo</text></svg>')}`,
+  apollo: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g stroke="#E8F04A" stroke-width="3" stroke-linecap="round"><path d="M12 2.5v19M2.5 12h19M5.3 5.3l13.4 13.4M18.7 5.3L5.3 18.7"/></g></svg>')}`,
   // Hunter.io
   hunterio: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#FF6633"/><circle cx="12" cy="12" r="7" fill="none" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="1" fill="white"/></svg>')}`,
   // ZoomInfo
   zoominfo: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#21B573"/><text x="12" y="17" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="12" fill="white">Z</text></svg>')}`,
+  // Close CRM - blue tile with an open "C"
+  close: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#2F6BFF"/><path d="M16.5 8.2A6 6 0 1 0 16.5 15.8" stroke="white" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>')}`,
+  // ActiveCampaign - blue chevron
+  activecampaign: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 3.5l11 8.5-11 8.5" stroke="#4B7BF5" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')}`,
+  // Hyros
+  hyros: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="#F97316"/><text x="12" y="17" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="12" fill="white">H</text></svg>')}`,
+  // Google Apps Script - code brackets in Google yellow
+  appsscript: `data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 6l-6 6 6 6" stroke="#F4B400" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 6l6 6-6 6" stroke="#0F9D58" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4l-4 16" stroke="#4285F4" stroke-width="2.6" stroke-linecap="round"/></svg>')}`,
 };
 
 interface Tool {
   name: string;
   logo: string;
+  /* Per-logo fixes, e.g. inverting a black logo so it shows on the dark background */
+  imgClassName?: string;
 }
 
 interface ToolGroup {
@@ -58,96 +70,118 @@ interface ToolGroup {
 
 const toolGroups: ToolGroup[] = [
   {
-    label: "LANGUAGES & ANALYTICS TOOLS",
+    label: "Data & Analytics",
     tools: [
-      { name: "SQL", logo: `${DV}/postgresql/postgresql-original.svg` },
-      { name: "Python", logo: `${DV}/python/python-original.svg` },
+      { name: "SQL", logo: "/images/logos/postgresql.svg" },
+      { name: "Python", logo: "/images/logos/python.svg" },
       { name: "Power BI", logo: LOGOS.powerbi },
       { name: "Looker Studio", logo: "/images/logos/lookerstudio.png" },
       { name: "Excel", logo: LOGOS.excel },
-      { name: "GitHub", logo: `${DV}/github/github-original.svg` },
-      { name: "VS Code", logo: `${DV}/vscode/vscode-original.svg` },
+      { name: "Google Workspace", logo: "/images/logos/google.svg" },
+      { name: "Supabase", logo: "/images/logos/supabase.svg" },
+      { name: "Airtable", logo: LOGOS.airtable },
     ],
   },
   {
-    label: "PLATFORMS & INTEGRATIONS",
+    label: "Automation & AI",
     tools: [
-      { name: "OpenAI", logo: LOGOS.openai },
+      { name: "Make", logo: "/images/logos/make.png" },
+      { name: "n8n", logo: LOGOS.n8n, imgClassName: "w-8" },
+      { name: "Zapier", logo: LOGOS.zapier },
+      { name: "Apps Script", logo: LOGOS.appsscript },
       { name: "Claude", logo: "/images/logos/claude.png" },
+      { name: "OpenAI", logo: LOGOS.openai },
       { name: "Gemini", logo: "/images/logos/gemini.png" },
       { name: "Lovable", logo: LOGOS.lovable },
-      { name: "Supabase", logo: `${DV}/supabase/supabase-original.svg` },
-      { name: "Make", logo: "/images/logos/make.png" },
-      { name: "Zapier", logo: LOGOS.zapier },
-      { name: "n8n", logo: LOGOS.n8n },
-      { name: "Airtable", logo: LOGOS.airtable },
-      { name: "Google Workspace", logo: `${DV}/google/google-original.svg` },
-      { name: "Heyreach", logo: LOGOS.heyreach },
-      { name: "Instantly", logo: LOGOS.instantly },
+    ],
+  },
+  {
+    label: "CRM, Sales & Marketing",
+    tools: [
+      { name: "Close CRM", logo: LOGOS.close },
+      { name: "Salesforce", logo: "/images/logos/salesforce.svg" },
+      { name: "ActiveCampaign", logo: LOGOS.activecampaign },
+      { name: "Hyros", logo: LOGOS.hyros },
       { name: "Clay", logo: LOGOS.clay },
-      { name: "Salesforce", logo: `${DV}/salesforce/salesforce-original.svg` },
+      { name: "Apollo", logo: LOGOS.apollo },
+      { name: "ZoomInfo", logo: "/images/logos/zoominfo.png", imgClassName: "rounded-[5px]" },
+      { name: "Hunter.io", logo: "/images/logos/hunter.png" },
+      { name: "Instantly", logo: LOGOS.instantly },
+      { name: "Heyreach", logo: LOGOS.heyreach },
+      { name: "Calendly", logo: LOGOS.calendly },
+    ],
+  },
+  {
+    label: "Infrastructure & Collaboration",
+    tools: [
+      { name: "Docker", logo: "/images/logos/docker.svg" },
+      { name: "Redis", logo: "/images/logos/redis.svg" },
+      { name: "Cloudflare", logo: "/images/logos/cloudflare.svg" },
+      { name: "GitHub", logo: "/images/logos/github.svg", imgClassName: "invert" },
+      { name: "VS Code", logo: "/images/logos/vscode.svg" },
+      { name: "Slack", logo: "/images/logos/slack.svg" },
+      { name: "Notion", logo: "/images/logos/notion.svg", imgClassName: "rounded-[4px] bg-white p-px" },
       { name: "Asana", logo: LOGOS.asana },
-      { name: "Slack", logo: `${DV}/slack/slack-original.svg` },
       { name: "Discord", logo: LOGOS.discord },
       { name: "Telegram", logo: LOGOS.telegram },
       { name: "Zoom", logo: LOGOS.zoom },
-      { name: "Calendly", logo: LOGOS.calendly },
-      { name: "Apollo", logo: LOGOS.apollo },
-      { name: "Hunter.io", logo: "/images/logos/hunter.png" },
-      { name: "ZoomInfo", logo: "/images/logos/zoominfo.png" },
     ],
   },
 ];
 
-const ToolCard = ({ tool }: { tool: Tool }) => (
-  <div className="group flex flex-col items-center gap-2.5 p-4 rounded-xl bg-card/60 border border-border/40 hover:border-primary/30 hover:bg-card/80 transition-all duration-300 cursor-default">
+const ToolPill = ({ tool }: { tool: Tool }) => (
+  <li className="group flex items-center gap-2 rounded-xl border border-border/50 bg-background/40 px-3 py-2 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-card hover:shadow-[0_10px_30px_-12px_hsl(var(--primary)/0.45)]">
     <img
       src={tool.logo}
-      alt={tool.name}
-      className="w-7 h-7 object-contain group-hover:scale-110 transition-transform duration-300"
-      style={{ mixBlendMode: "screen" }}
+      alt=""
+      className={cn(
+        "h-5 w-5 object-contain transition-transform duration-300 group-hover:scale-110",
+        tool.imgClassName
+      )}
       loading="lazy"
     />
-    <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-300 text-center leading-tight">
+    <span className="text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
       {tool.name}
     </span>
-  </div>
+  </li>
 );
 
 const ToolsSection = () => {
   return (
-    <section
-      id="tools"
-      className="py-24 relative"
-      style={{ backgroundColor: "hsl(230 25% 8% / 0.9)" }}
-    >
+    <section id="tools" className="relative py-20 md:py-24">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-accent/[0.03] to-transparent"
+      />
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-14">
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-3">
-            Tools & Technologies
-          </h2>
-          <p className="text-muted-foreground text-base max-w-xl mx-auto">
-            Tools are selected based on reliability, scalability, and clean handoff.
-          </p>
-        </div>
+      <div className="shell relative z-10">
+        <SectionHeading
+          index="05"
+          eyebrow="Tech Stack"
+          title={
+            <>
+              Tools &amp; <span className="text-gradient-primary">Technologies</span>
+            </>
+          }
+          description="Tools are selected based on reliability, scalability, and clean handoff."
+        />
 
-        {/* Tool Groups */}
-        <div className="max-w-5xl mx-auto space-y-10">
-          {toolGroups.map((group) => (
-            <div key={group.label}>
-              <h3 className="text-[11px] font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-4">
-                {group.label}
-              </h3>
-              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                {group.tools.map((tool) => (
-                  <ToolCard key={tool.name} tool={tool} />
-                ))}
+        <div className="grid gap-5 lg:grid-cols-2">
+          {toolGroups.map((group, index) => (
+            <Reveal key={group.label} delay={0.08 * index} className="h-full">
+              <div className="h-full rounded-2xl border border-border bg-card/70 p-6 backdrop-blur-sm">
+                <h3 className="label-mono mb-5 flex items-center gap-3 text-muted-foreground">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  {group.label}
+                </h3>
+                <ul className="flex flex-wrap gap-2.5">
+                  {group.tools.map((tool) => (
+                    <ToolPill key={tool.name} tool={tool} />
+                  ))}
+                </ul>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

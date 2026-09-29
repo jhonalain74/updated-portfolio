@@ -1,136 +1,179 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Logo from "@/components/Logo";
+import { navLinks } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
-const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#services", label: "Services" },
-  { href: "#works", label: "Work" },
-  { href: "#contact", label: "Contact" },
-];
+/* Contact is reached through the "Let's Talk" button, so it isn't repeated as a menu link */
+const menuLinks = navLinks.filter((link) => link.href !== "#contact");
+const CONTACT = "#contact";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("#home");
   const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       setScrolled(window.scrollY > 20);
-      const sections = ["#home", ...navLinks.map(link => link.href)];
+      setProgress(maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0);
+
+      // The last section can be too short to reach the top, so treat the page bottom as "Contact"
+      if (window.scrollY >= maxScroll - 4) {
+        setActiveSection(CONTACT);
+        return;
+      }
+      const sections = ["#home", ...menuLinks.map((link) => link.href), CONTACT];
       for (const section of [...sections].reverse()) {
         const element = document.querySelector(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 100) {
-            setActiveSection(section);
-            break;
-          }
+        if (element && element.getBoundingClientRect().top <= 100) {
+          setActiveSection(section);
+          break;
         }
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isOpen]);
 
   const handleClick = (href: string) => {
     setIsOpen(false);
     setActiveSection(href);
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-md" : "bg-transparent"
-      }`}
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled || isOpen ? "bg-background/75 backdrop-blur-xl" : "bg-transparent"
+      )}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-16">
-        {/* Logo — simple text initials */}
-        <a
-          href="#home"
-          className="font-heading font-bold text-xl text-foreground hover:opacity-80 transition-opacity tracking-tight"
-          onClick={(e) => {
-            e.preventDefault();
-            handleClick("#home");
-          }}
-        >
-          JG
+      <nav
+        aria-label="Main"
+        className="shell flex h-16 items-center justify-between"
+      >
+        <a href="#home" onClick={() => handleClick("#home")} aria-label="Jhon Gennes, back to top">
+          <Logo nameClassName="hidden sm:block" />
         </a>
 
-        {/* Desktop Nav Links + CTA — right aligned */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <button
-              key={link.href}
-              onClick={() => handleClick(link.href)}
-              className={`text-sm font-medium transition-colors duration-300 ${
-                activeSection === link.href
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {link.label}
-            </button>
-          ))}
+        {/* Desktop links + CTA */}
+        <div className="hidden items-center gap-4 lg:flex">
+          <ul className="flex items-center gap-1 rounded-full border border-border/60 bg-card/40 p-1 backdrop-blur-md">
+            {menuLinks.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  onClick={() => handleClick(link.href)}
+                  aria-current={activeSection === link.href ? "true" : undefined}
+                  className={cn(
+                    "block rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-300",
+                    activeSection === link.href
+                      ? "bg-primary/15 text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
 
-          {/* CTA — outlined */}
-          <button
-            onClick={() => handleClick("#contact")}
-            className="text-sm font-medium px-5 py-2 rounded-md border border-muted-foreground/40 text-foreground hover:border-primary hover:text-primary transition-all duration-300"
+          {/* Rings while the Contact section is on screen, standing in for a "Contact" link */}
+          <Button
+            asChild
+            variant="neon"
+            size="sm"
+            className={cn(
+              activeSection === CONTACT && "ring-2 ring-primary/60 ring-offset-2 ring-offset-background"
+            )}
           >
-            Let's Talk
-          </button>
+            <a
+              href={CONTACT}
+              onClick={() => handleClick(CONTACT)}
+              aria-current={activeSection === CONTACT ? "true" : undefined}
+            >
+              Let's Talk
+            </a>
+          </Button>
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile menu toggle */}
         <button
-          className="md:hidden text-foreground p-2"
+          type="button"
+          className="rounded-lg p-2 text-foreground lg:hidden"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
         >
           {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
-      </div>
+      </nav>
 
-      {/* Subtle bottom line */}
+      {/* Scroll progress */}
       <div
-        className="h-px w-full transition-opacity duration-300"
-        style={{
-          background: "linear-gradient(90deg, transparent, hsl(215 85% 60% / 0.15) 30%, hsl(195 85% 55% / 0.15) 70%, transparent)",
-          opacity: scrolled ? 1 : 0.3,
-        }}
-      />
-
-      {/* Mobile Dropdown */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        }`}
+        aria-hidden="true"
+        className={cn(
+          "h-px w-full bg-border/40 transition-opacity duration-300",
+          scrolled ? "opacity-100" : "opacity-0"
+        )}
       >
-        <div className="bg-background/95 backdrop-blur-xl border-b border-border px-6 py-4 flex flex-col gap-1">
-          {navLinks.map((link) => (
-            <button
-              key={link.href}
-              onClick={() => handleClick(link.href)}
-              className={`text-left px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
-                activeSection === link.href
-                  ? "text-foreground bg-card"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {link.label}
-            </button>
-          ))}
-          <button
-            className="mt-2 text-sm font-medium px-5 py-2.5 rounded-md border border-muted-foreground/40 text-foreground hover:border-primary transition-all duration-300"
-            onClick={() => handleClick("#contact")}
-          >
-            Let's Talk
-          </button>
-        </div>
+        <div
+          className="h-full origin-left bg-gradient-primary"
+          style={{ transform: `scaleX(${progress})` }}
+        />
       </div>
-    </nav>
+
+      {/* Mobile dropdown */}
+      <div
+        id="mobile-menu"
+        className={cn(
+          "overflow-hidden border-b border-border transition-all duration-300 ease-in-out lg:hidden",
+          isOpen ? "visible max-h-[28rem] opacity-100" : "invisible max-h-0 border-transparent opacity-0"
+        )}
+      >
+        <ul className="shell flex flex-col gap-1 py-4">
+          {menuLinks.map((link) => (
+            <li key={link.href}>
+              <a
+                href={link.href}
+                onClick={() => handleClick(link.href)}
+                aria-current={activeSection === link.href ? "true" : undefined}
+                className={cn(
+                  "block rounded-lg px-3 py-3 text-sm font-medium transition-all duration-300",
+                  activeSection === link.href
+                    ? "bg-card text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+          <li className="mt-2">
+            <Button asChild variant="neon" className="w-full">
+              <a href={CONTACT} onClick={() => handleClick(CONTACT)}>
+                Let's Talk
+              </a>
+            </Button>
+          </li>
+        </ul>
+      </div>
+    </header>
   );
 };
 

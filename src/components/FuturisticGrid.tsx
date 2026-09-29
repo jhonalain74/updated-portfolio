@@ -17,6 +17,8 @@ const FuturisticGrid = () => {
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const animationRef = useRef<number>(0);
   const sizeRef = useRef({ w: 0, h: 0 });
+  // With "reduce motion" on, draw a single still frame instead of animating
+  const reduceMotionRef = useRef(false);
 
   const PARTICLE_COUNT = 120;
   const CONNECTION_DISTANCE = 150;
@@ -104,7 +106,9 @@ const FuturisticGrid = () => {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(100, 160, 255, ${opacity + mouseGlow})`;
+          ctx.strokeStyle = mouseGlow > 0
+            ? `rgba(242, 107, 58, ${opacity + mouseGlow})`
+            : `rgba(200, 200, 210, ${opacity * 0.6})`;
           ctx.lineWidth = 0.6;
           ctx.stroke();
         }
@@ -124,7 +128,7 @@ const FuturisticGrid = () => {
         const glowIntensity = (1 - dist / MOUSE_RADIUS) * 0.6;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius * 6, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(80, 140, 255, ${glowIntensity * 0.15})`;
+        ctx.fillStyle = `rgba(242, 107, 58, ${glowIntensity * 0.18})`;
         ctx.fill();
       }
 
@@ -134,22 +138,25 @@ const FuturisticGrid = () => {
       const coreOpacity = nearMouse
         ? p.opacity + (1 - dist / MOUSE_RADIUS) * 0.5
         : p.opacity;
-      ctx.fillStyle = `rgba(140, 180, 255, ${coreOpacity})`;
+      ctx.fillStyle = nearMouse ? `rgba(255, 170, 130, ${coreOpacity})` : `rgba(190, 190, 200, ${coreOpacity * 0.7})`;
       ctx.fill();
 
       // Bright center
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200, 220, 255, ${coreOpacity * 1.2})`;
+      ctx.fillStyle = `rgba(240, 240, 245, ${coreOpacity})`;
       ctx.fill();
     }
 
-    animationRef.current = requestAnimationFrame(draw);
+    if (!reduceMotionRef.current) {
+      animationRef.current = requestAnimationFrame(draw);
+    }
   }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    reduceMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -166,6 +173,10 @@ const FuturisticGrid = () => {
       if (particlesRef.current.length === 0) {
         initParticles(w, h);
       }
+      // Resizing clears the canvas, so repaint the still frame
+      if (reduceMotionRef.current) {
+        animationRef.current = requestAnimationFrame(draw);
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -176,14 +187,23 @@ const FuturisticGrid = () => {
       mouseRef.current = { x: -1000, y: -1000 };
     };
 
+    // Full strength over the hero, easing down to 40% once the first screen has scrolled by
+    const handleScroll = () => {
+      const progress = Math.min(window.scrollY / window.innerHeight, 1);
+      canvas.style.opacity = String(1 - progress * 0.6);
+    };
+
     resize();
+    handleScroll();
     window.addEventListener('resize', resize);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
     animationRef.current = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener('resize', resize);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       cancelAnimationFrame(animationRef.current);
